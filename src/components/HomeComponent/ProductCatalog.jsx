@@ -1,7 +1,7 @@
-import img2 from "../assets/img2.png"
-import img3 from "../assets/img3.png"
-import img4 from "../assets/img4.png"
-import img5 from "../assets/img5.png"
+import img2 from "../../assets/img2.png"
+import img3 from "../../assets/img3.png"
+import img4 from "../../assets/img4.png"
+import img5 from "../../assets/img5.png"
 
 const ProductCatalog = () => {
   return (

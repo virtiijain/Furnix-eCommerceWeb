@@ -1,14 +1,13 @@
-import img6 from "../assets/img6.png";
-import img7 from "../assets/img7.png";
-import img8 from "../assets/img8.png";
-import img9 from "../assets/img9.png";
-import img10 from "../assets/img10.png";
-import img11 from "../assets/img11.png";
-import img12 from "../assets/img12.png";
-import img13 from "../assets/img13.png";
-import img17 from "../assets/img17.png";
+import img6 from "../../assets/img6.png";
+import img7 from "../../assets/img7.png";
+import img8 from "../../assets/img8.png";
+import img9 from "../../assets/img9.png";
+import img10 from "../../assets/img10.png";
+import img11 from "../../assets/img11.png";
+import img12 from "../../assets/img12.png";
+import img13 from "../../assets/img13.png";
+import img17 from "../../assets/img17.png";
 import { useState } from "react";
-import { LuShoppingCart } from "react-icons/lu";
 
 const products = [
   {
@@ -80,31 +79,13 @@ const Shop = () => {
     return cart.reduce((total, item) => {
       const priceWithoutCurrencyAndCommas = item.price.replace('₹', '').replace(',', '');
       const priceAsNumber = parseFloat(priceWithoutCurrencyAndCommas);
-      return total + (priceAsNumber || 0); // Handle potential parsing errors
+      return total + (priceAsNumber || 0); 
     }, 0);
   };
 
   return (
     <div id="shop" className="min-h-screen p-9">
       <div className="max-w-8xl mx-auto">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl md:text-3xl lg:text-3xl font-semibold  text-gray-800">
-            Top Products
-          </h2>
-          <button
-            className="text-2xl bg-secondary text-purplish rounded-full p-2 relative"
-            onClick={() => setIsCartOpen(true)}
-          >
-            <LuShoppingCart />
-            {cart.length > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-sm rounded-full w-5 h-5 flex items-center justify-center">
-                {cart.length}
-              </span>
-            )}
-          </button>
-        </div>
-
         {/* Product Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {products.map((product, index) => (
