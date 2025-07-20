@@ -6,11 +6,15 @@ import { CiHeart } from "react-icons/ci";
 import { NavLink } from "react-router-dom";
 import { LuShoppingCart } from "react-icons/lu";
 import img16 from "../../assets/img16.png";
+import { useWishlist } from "../../context/WishlistContext";
+import { useCart } from "../../context/CartContext";
 
 const Navbar = () => {
+  const { wishlist } = useWishlist();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const menuRef = useRef(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const { cart } = useCart();
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
@@ -45,36 +49,62 @@ const Navbar = () => {
         <ul className="flex space-x-7 duration-200">
           <NavLink
             to="/"
-            className={({ isActive }) => (isActive ? "text-purplish" : "")}
+            className={({ isActive }) =>
+              isActive ? "text-yellow-900" : "text-black"
+            }
           >
-            <li className="cursor-pointer hover:text-purplish">Home</li>
+            <li className="cursor-pointer hover:text-yellow-900">Home</li>
           </NavLink>
           <NavLink
             to="/shop"
-            className={({ isActive }) => (isActive ? "text-purplish" : "")}
+            className={({ isActive }) =>
+              isActive ? "text-yellow-900" : "text-black"
+            }
           >
-            <li className="cursor-pointer hover:text-purplish">Shop</li>
+            <li className="cursor-pointer hover:text-yellow-900">Shop</li>
           </NavLink>
           <NavLink
             to="/contact"
-            className={({ isActive }) => (isActive ? "text-purplish" : "")}
+            className={({ isActive }) =>
+              isActive ? "text-yellow-900" : "text-black"
+            }
           >
-            <li className="cursor-pointer hover:text-purplish">Contact</li>
+            <li className="cursor-pointer hover:text-yellow-900">Contact</li>
           </NavLink>
         </ul>
       </div>
 
       {/* Buttons */}
       <div className="hidden ml-3 md:flex space-x-4">
-        <button className="text-2xl border hover:bg-purplish hover:text-white rounded-full p-2 duration-200">
-          <CiHeart />
-        </button>
-        <button className="text-2xl border hover:bg-purplish hover:text-white rounded-full p-2 duration-200">
-          <LuShoppingCart />
-        </button>
+        <NavLink
+          to="/wishlist"
+          className="relative w-12 h-12 flex items-center justify-center text-2xl border hover:bg-yellow-900 hover:text-white rounded-full duration-200"
+        >
+          <div className="relative">
+            <CiHeart />
+            {wishlist.length > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] sm:text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                {wishlist.length}
+              </span>
+            )}
+          </div>
+        </NavLink>
+        <NavLink
+          to="/cart"
+          className="relative w-12 h-12 flex items-center justify-center text-2xl border hover:bg-yellow-900 hover:text-white rounded-full duration-200"
+        >
+          <div className="relative">
+            <LuShoppingCart />
+            {cart.length > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] sm:text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                {cart.length}
+              </span>
+            )}
+          </div>
+        </NavLink>
         <button
           onClick={handleGetStarted}
-          className="flex items-center px-4 py-2 bg-purplish border rounded-full text-white font-normal hover:bg-transparent hover:text-black duration-200"
+          className="flex items-center px-4 py-2 bg-yellow-900 border rounded-full text-white font-normal hover:bg-transparent hover:text-black duration-200"
         >
           Get Started&nbsp;
           <FaArrowRight />
@@ -114,7 +144,7 @@ const Navbar = () => {
             </div>
             <button
               onClick={handleClosePopup}
-              className="bg-purplish text-white font-medium py-2 px-4 rounded-md w-full mb-2"
+              className="bg-yellow-900 text-white font-medium py-2 px-4 rounded-md w-full mb-2"
             >
               Create account
             </button>
@@ -128,7 +158,7 @@ const Navbar = () => {
 
       {/* Mobile Nav Toggle */}
       <div className="md:hidden flex items-center space-x-3">
-        <button className="text-2xl hover:bg-purplish hover:text-white rounded-full p-2 duration-200">
+        <button className="text-2xl hover:bg-yellow-900 hover:text-white rounded-full p-2 duration-200">
           <CiHeart />
         </button>
         <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
@@ -139,7 +169,7 @@ const Navbar = () => {
       {/* Mobile Nav */}
       <div
         ref={menuRef}
-        className={`absolute top-16 left-0 w-full bg-purplish text-white flex flex-col items-center space-y-4 py-4 md:hidden transition-all duration-300 z-40 ${
+        className={`absolute top-16 left-0 w-full bg-yellow-900 text-white flex flex-col items-center space-y-4 py-4 md:hidden transition-all duration-300 z-40 ${
           isMobileMenuOpen
             ? "opacity-100 max-h-screen"
             : "opacity-0 max-h-0 overflow-hidden"

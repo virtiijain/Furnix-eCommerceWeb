@@ -4,9 +4,8 @@ A modern, responsive eCommerce furniture website built using **React.js** and **
 
 ## Tech Stack
 
-- **Frontend**: React.js, Tailwind CSS, React Router
-- **State Management**: useState, useContext
+- **Frontend**: React.js, Tailwind CSS
+- **State Management**: Redux
 - **Deployment**: Netlify
-
 
 >> Ongoing...

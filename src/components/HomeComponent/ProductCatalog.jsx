@@ -6,9 +6,10 @@ import img5 from "../../assets/img5.png"
 const ProductCatalog = () => {
   return (
     <div id="categories" className="p-5 md:p-5 lg:p-10">
-      <h2 className=" text-2xl md:text-3xl lg:text-3xl font-semibold mb-8 text-gray-800">
+      <h2 className=" text-2xl lg:text-3xl font-normal mb-2 text-gray-800">
         Categories
       </h2>
+      <p className="mb-5 max-w-7xl text-sm">Lorem, Lorem ipsum dolor sit, amet consectetur adipisicing elit. Alias perferendis omnis ad facere mollitia officiis iusto doloribus nulla reiciendis modi. ipsum dolor sit amet consectetur adipisicing elit. Quaerat at itaque distinctio placeat error assumenda fugiat voluptas nobis alias vitae eum, eos deleniti odio deserunt ut inventore repellendus, corrupti ducimus.</p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
         {/* Sitting Room */}
