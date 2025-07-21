@@ -8,4 +8,9 @@ A modern, responsive eCommerce furniture website built using **React.js** and **
 - **State Management**: Redux
 - **Deployment**: Netlify
 
+**Backend integration (coming soon)** for:
+  - User authentication
+  - Storing wishlist/cart items
+  - Order processing
+
 >> Ongoing...

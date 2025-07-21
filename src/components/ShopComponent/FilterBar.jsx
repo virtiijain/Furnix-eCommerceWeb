@@ -4,17 +4,17 @@ const FilterBar = ({ onCategoryChange, selectedCategory }) => {
   const categories = ["All", "Chair", "Sofa", "Table", "Vase", "Lamp"];
 
   return (
-    <section className="px-8 ">
-      <h1 className="text-center font-normal text-3xl mt-5 pb-3">
+    <section className="px-4">
+      <h1 className="text-center font-normal text-2xl lg:text-3xl mt-4 pb-3">
         Top products
       </h1>
-      <p className="text-center max-w-5xl mx-auto">
+      <p className="text-center text-[13px] lg:text-base max-w-8xl mx-auto">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas
         perspiciatis illum architecto, unde, tenetur cum quo quisquam vitae
         possimus aliquam culpa vero, reprehenderit magnam rerum quod dignissimos
         saepe? Vel, asperiores.
       </p>
-      <div className="flex flex-wrap gap-2 p-4 justify-center items-center">
+      <div className="flex flex-wrap gap-2 py-4 justify-center items-center">
         {categories.map((name) => (
           <button
             key={name}

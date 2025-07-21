@@ -1,29 +1,39 @@
-import img1 from "../../assets/img1.png"
+import img1 from "../../assets/img1.png";
 
 const Hero = () => {
   return (
-    <div id="home" className="flex flex-col items-center justify-center mt-8 py-10 px-5 md:px-20">
-      {/* Top Text section */}
-      <div className="text-center">
-        <h1 className="text-sm font-normal text-gray-600 tracking-wider mb-5">
+    <header
+      id="home"
+      className="min-h-screen flex flex-col-reverse lg:flex-row items-center justify-center px-8 gap-12"
+    >
+      <div className="w-full lg:w-1/2 text-center lg:text-left">
+        <h1 className="text-sm font-medium text-yellow-800 tracking-widest mb-4">
           FURNITURE STORE
         </h1>
-        <h2 className="text-2xl md:text-5xl font-semibold text-gray-800 leading-tight mb-5">
-          Discover the Artistry of Modern Contemporary Furniture
+        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-gray-800 leading-tight mb-6">
+          Discover the Artistry of <br className="hidden md:block" />
+          Modern Contemporary Furniture
         </h2>
-        <p className=" text-gray-600 text-lg px-5 mb-3">
-          Experience the elegance and functionality of cutting-edge design where
-          luxury meets innovation in every piece for ultimate relaxation
+        <p className="text-gray-600 text-base sm:text-lg mb-8 leading-relaxed">
+          Experience the elegance and functionality of cutting-edge design,
+          where luxury meets innovation in every piece — designed for comfort
+          and style.
         </p>
+        <a href="/shop"
+          className="bg-yellow-900 text-white px-6 py-3 text-sm rounded-md hover:bg-yellow-800 transition duration-300"
+        >
+          Shop Now
+        </a>
       </div>
 
-      {/* Hero Image section */}
-      <div className="w-full max-w-4xl mt-8 ">
-        <img src={img1}
-          className="object-cover rounded-2xl shadow-lg w-full mb-14"
+      <div className="w-full lg:w-1/2 hidden md:block">
+        <img
+          src={img1}
+          alt="Furniture"
+          className="w-full h-auto max-h-[500px] object-cover rounded-2xl shadow-lg"
         />
       </div>
-    </div>
+    </header>
   );
 };
 

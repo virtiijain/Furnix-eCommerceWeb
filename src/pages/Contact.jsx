@@ -1,6 +1,6 @@
 const Contact = () => {
   return (
-    <section className="bg-white py-16 px-6 max-w-5xl mx-auto">
+    <section className="py-8 lg:py-28 px-5 max-w-5xl mx-auto">
       <div className="grid md:grid-cols-2 gap-12 mb-16">
         <div>
           <h1 className="text-3xl lg:text-5xl font-normal mb-3">Contact Us</h1>
@@ -47,7 +47,7 @@ const Contact = () => {
           ></textarea>
           <button
             type="submit"
-            className="bg-black text-white px-6 py-3 rounded-md hover:bg-gray-800 transition"
+            className="bg-yellow-900 text-white px-6 py-3 rounded-md hover:bg-yellow-800 transition"
           >
             Send Message
           </button>

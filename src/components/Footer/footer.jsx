@@ -5,19 +5,15 @@ const Footer = () => {
         <div>
           <h2 className="text-2xl font-medium mb-4">Modern Art Furnish</h2>
           <nav className="space-y-2">
-            <a href="#" className="text-sm hover:underline">
+            <a href="/" className="text-sm hover:underline">
               Home
             </a>
             <span className="text-sm mx-1">/</span>
-            <a href="#" className="text-sm hover:underline">
+            <a href="/shop" className="text-sm hover:underline">
               Shop
             </a>
             <span className="text-sm mx-1">/</span>
-            <a href="#" className="text-sm hover:underline">
-            Categories
-            </a>
-            <span className="text-sm mx-1">/</span>
-            <a href="" className="text-sm hover:underline">
+            <a href="/contact" className="text-sm hover:underline">
             Contact
             </a>
           </nav>
