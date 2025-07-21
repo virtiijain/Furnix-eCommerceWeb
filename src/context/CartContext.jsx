@@ -1,4 +1,6 @@
 import { createContext, useContext, useState } from "react";
+import PropTypes from "prop-types";
+import { useEffect } from "react"; 
 
 const CartContext = createContext();
 
@@ -7,6 +9,10 @@ export const CartProvider = ({ children }) => {
   const storedCart = localStorage.getItem("cartItems");
   return storedCart ? JSON.parse(storedCart) : [];
 });
+
+useEffect(() => {
+    localStorage.setItem("cartItems", JSON.stringify(cart));
+  }, [cart]);
 
   const addToCart = (product) => {
     setCart((prev) => {
@@ -30,7 +36,7 @@ export const CartProvider = ({ children }) => {
   };
 
   const totalPrice = cart.reduce(
-    (total, item) => total + item.price * item.quantity,
+    (total, item) => total + Number(item.price) * item.quantity,
     0
   );
 
@@ -44,3 +50,7 @@ export const CartProvider = ({ children }) => {
 };
 
 export const useCart = () => useContext(CartContext);
+
+CartProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};

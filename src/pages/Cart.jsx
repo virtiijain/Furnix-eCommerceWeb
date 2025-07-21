@@ -1,11 +1,7 @@
 import { useCart } from "../context/CartContext";
-import { useEffect } from "react";
 
 const Cart = () => {
   const { cart, removeFromCart, totalPrice, clearCart } = useCart();
-  useEffect(() => {
-  localStorage.setItem("cartItems", JSON.stringify(cart));
-}, [cart]);
 
   return (
     <div className="min-h-screen p-9">

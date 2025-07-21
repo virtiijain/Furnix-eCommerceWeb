@@ -1,14 +1,7 @@
 import { useWishlist } from "../context/WishlistContext";
-// import { useState } from "react";
 
 const Wishlist = () => {
   const { wishlist, removeWishlist } = useWishlist();
-  // const [cart, setCart] = useState([]);
-
-  // const addToCart = (product) => {
-  //   setCart((prev) => [...prev, product]);
-  //   // You can also move this to context if you have a CartContext
-  // };
 
   const totalPrice = wishlist.reduce(
     (acc, item) => acc + parseFloat(item.price.replace(",", "")),
@@ -25,7 +18,10 @@ const Wishlist = () => {
         <>
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-6">
             {wishlist.map((product, index) => (
-              <div key={index} className="border border-slate-500 p-4 rounded-lg">
+              <div
+                key={index}
+                className="border border-slate-500 p-4 rounded-lg"
+              >
                 <img
                   src={product.image}
                   alt={product.name}
@@ -34,7 +30,9 @@ const Wishlist = () => {
                 <h2 className="sm:text-sm md:text-base lg:text-lg font-medium truncate">
                   {product.name}
                 </h2>
-                <p className="text-gray-500 font-medium mb-2">{product.price}</p>
+                <p className="text-gray-500 font-medium mb-2">
+                  {product.price}
+                </p>
 
                 <div className="flex flex-col gap-2 mt-3">
                   <button

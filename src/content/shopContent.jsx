@@ -11,7 +11,7 @@ export const products = [
   {
     id: 1,
     name: "Sofa Couch",
-    price: "10,578",
+    price: "10578",
     colors: ["#D4A373", "#A68A64"],
     image: img6,
     category: "sofa",
@@ -19,7 +19,7 @@ export const products = [
   {
     id: 2,
     name: "Accent Chair",
-    price: "3,608",
+    price: "3608",
     colors: ["#D4E1F5", "#90A4AE"],
     image: img7,
     category: "chair",
@@ -35,7 +35,7 @@ export const products = [
   {
     id: 4,
     name: "Modern Chair",
-    price: "3,116",
+    price: "3116",
     colors: ["#78909C", "#9FA8DA", "#B39DDB"],
     image: img9,
     category: "chair",
@@ -43,7 +43,7 @@ export const products = [
   {
     id: 5,
     name: "Wood Chair",
-    price: "1,968",
+    price: "1968",
     colors: ["#A1887F"],
     image: img10,
     category: "chair",
@@ -59,7 +59,7 @@ export const products = [
   {
     id: 7,
     name: "Aurla Chair",
-    price: "4,510",
+    price: "4510",
     colors: ["#EDE7F6"],
     image: img12,
     category: "chair",
@@ -67,7 +67,7 @@ export const products = [
   {
     id: 8,
     name: "Wood Table",
-    price: "8,364",
+    price: "8364",
     colors: ["#BCAAA4"],
     image: img13,
     category: "table",
