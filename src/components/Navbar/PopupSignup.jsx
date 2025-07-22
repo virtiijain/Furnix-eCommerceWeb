@@ -1,6 +1,6 @@
 import { FaTimes } from "react-icons/fa";
 import img16 from "../../assets/img16.png";
-// import PropTypes from "prop-types";
+import PropTypes from "prop-types";
 
 const PopupSignup = ({ onClose }) => (
   <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-10 z-50">
@@ -43,3 +43,6 @@ const PopupSignup = ({ onClose }) => (
 
 export default PopupSignup;
 
+PopupSignup.propTypes = {
+  onClose: PropTypes.func.isRequired,
+}

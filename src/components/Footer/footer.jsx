@@ -3,7 +3,7 @@ const Footer = () => {
     <footer className="bg-black text-white py-10 mb-0">
       <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
         <div>
-          <h2 className="text-2xl font-medium mb-4">Modern Art Furnish</h2>
+          <h2 className="text-2xl font-medium mb-4">Furnix</h2>
           <nav className="space-y-2">
             <a href="/" className="text-sm hover:underline">
               Home
@@ -25,7 +25,7 @@ const Footer = () => {
             href="mailto:virtij29@gmail.com"
             className="text-sm hover:underline"
           >
-            ModernArtFurnish@gmail.com
+            Furnix@gmail.com
           </a>
         </div>
 

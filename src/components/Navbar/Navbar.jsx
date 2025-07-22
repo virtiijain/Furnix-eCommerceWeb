@@ -1,62 +1,41 @@
-import { useEffect, useRef, useState } from "react";
-import { FaArrowRight } from "react-icons/fa6";
+import { useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import NavLinks from "./NavLinks";
-import WishlistCartButtons from "./WishlistCartButtons";
 import PopupSignup from "./PopupSignup";
 import MobileToggle from "./MobileToggle";
 import MobileNav from "./MobileNav";
+import DesktopButtons from "./DesktopButtons";
+import { openPopup, closePopup } from "../../redux/popupSlice";
+import useOutsideClick from "../../hooks/useOutsideClick";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const dispatch = useDispatch();
+  const isPopupOpen = useSelector((state) => state.popup.isOpen);
   const menuRef = useRef(null);
 
-  useEffect(() => {
-    const handleOutsideClick = (e) => {
-      if (
-        menuRef.current &&
-        !menuRef.current.contains(e.target) &&
-        isMobileMenuOpen
-      ) {
-        setIsMobileMenuOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleOutsideClick);
-    return () => document.removeEventListener("mousedown", handleOutsideClick);
-  }, [isMobileMenuOpen]);
-
-  useEffect(() => {
-    if (isPopupOpen) setIsMobileMenuOpen(false);
-  }, [isPopupOpen]);
+  useOutsideClick(menuRef, () => setIsMobileMenuOpen(false), isMobileMenuOpen);
 
   return (
     <nav className="flex items-center justify-between p-4 text-black border-b">
-      <p className="text-lg font-medium uppercase">Modern Art Furnish</p>
+      <p className="text-lg font-medium uppercase">Furnix</p>
 
       <ul className="hidden md:flex space-x-8 font-light ml-auto">
         <NavLinks />
       </ul>
 
-      <div className="hidden ml-3 md:flex space-x-4">
-        <WishlistCartButtons />
-        <button
-          onClick={() => setIsPopupOpen(true)}
-          className="flex items-center px-4 py-2 bg-yellow-900 border rounded-full text-white font-normal hover:bg-transparent hover:text-black duration-200"
-        >
-          Get Started&nbsp;<FaArrowRight />
-        </button>
-      </div>
+      <DesktopButtons />
 
       <MobileToggle onToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)} />
 
       <MobileNav
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
-        onGetStarted={() => setIsPopupOpen(true)}
+        onGetStarted={() => dispatch(openPopup())}
         menuRef={menuRef}
       />
 
-      {isPopupOpen && <PopupSignup onClose={() => setIsPopupOpen(false)} />}
+      {isPopupOpen && <PopupSignup onClose={() => dispatch(closePopup())} />}
     </nav>
   );
 };

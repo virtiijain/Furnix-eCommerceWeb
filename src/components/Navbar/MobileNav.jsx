@@ -1,5 +1,6 @@
 import NavLinks from "./NavLinks";
 import { FaArrowRight } from "react-icons/fa6";
+import PropTypes from "prop-types";
 
 const MobileNav = ({ isOpen, onClose, onGetStarted, menuRef }) => (
   <div
@@ -21,3 +22,10 @@ const MobileNav = ({ isOpen, onClose, onGetStarted, menuRef }) => (
 );
 
 export default MobileNav;
+
+MobileNav.propTypes = {
+  isOpen: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onGetStarted: PropTypes.func.isRequired,
+  menuRef: PropTypes.object.isRequired,
+}

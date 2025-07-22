@@ -7,7 +7,7 @@ import Home from "./pages/Home";
 import Shop from "./pages/Shop";
 import Contact from "./pages/Contact";
 import WishList from "./pages/WishList";
-import Cart from "./pages/Cart"
+import Cart from "./pages/Cart";
 
 const App = () => {
   return (

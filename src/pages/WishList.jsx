@@ -10,10 +10,10 @@ const Wishlist = () => {
 
   return (
     <div className="min-h-screen p-9">
-      <h2 className="text-2xl font-bold mb-6">Your Wishlist</h2>
+      <h2 className="text-2xl font-normal mb-2">Your Wishlist</h2>
 
       {wishlist.length === 0 ? (
-        <p className="text-gray-500">No items in wishlist.</p>
+        <p className="text-gray-500 text-sm">No items in wishlist.</p>
       ) : (
         <>
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-6">
