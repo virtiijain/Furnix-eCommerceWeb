@@ -18,7 +18,9 @@ const Navbar = () => {
 
   return (
     <nav className="flex items-center justify-between p-4 text-black border-b">
-      <p className="text-lg font-medium uppercase">Furnix</p>
+      <p className="text-xl font-semibold uppercase tracking-[0.2em] text-gray-800 drop-shadow-sm">
+        Furnix
+      </p>
 
       <ul className="hidden md:flex space-x-8 font-light ml-auto">
         <NavLinks />

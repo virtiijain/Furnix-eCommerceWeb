@@ -16,7 +16,7 @@ const Hero = () => {
         </h2>
         <p className="text-gray-600 text-base sm:text-lg mb-8 leading-relaxed">
           Experience the elegance and functionality of cutting-edge design,
-          where luxury meets innovation in every piece — designed for comfort
+          where luxury meets innovation in every piece designed for comfort
           and style.
         </p>
         <a href="/shop"

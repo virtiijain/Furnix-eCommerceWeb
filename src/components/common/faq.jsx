@@ -23,7 +23,7 @@ export default function FAQ() {
               className="w-full flex justify-between items-center p-4 text-left text-lg font-medium text-gray-800 hover:bg-gray-50"
               onClick={() => toggleFAQ(index)}
             >
-              <span>{faq.question}</span>
+              <span className="text-base font-normal">{faq.question}</span>
               {openIndex === index ? (
                 <FaChevronUp className="text-gray-500" />
               ) : (

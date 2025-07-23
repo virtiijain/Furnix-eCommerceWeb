@@ -11,11 +11,11 @@ const WishlistCartButtons = () => {
     <>
       <NavLink
         to="/wishlist"
-        className="relative w-12 h-12 flex items-center justify-center text-2xl"
+        className="relative flex items-center justify-center text-2xl w-10 h-10 sm:w-12 sm:h-12"
       >
         <HiOutlineHeart />
         {wishlist.length > 0 && (
-          <span className="absolute -top-1 -right-2 bg-red-600 text-white text-[10px] rounded-full w-5 h-5 flex items-center justify-center z-50">
+          <span className="absolute top-0 right-0 translate-x-1/3 -translate-y-1/3 bg-red-600 text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full z-50">
             {wishlist.length}
           </span>
         )}
@@ -23,11 +23,11 @@ const WishlistCartButtons = () => {
 
       <NavLink
         to="/cart"
-        className="relative w-12 h-12 flex items-center justify-center text-2xl"
+        className="relative flex items-center justify-center text-2xl w-10 h-10 sm:w-12 sm:h-12"
       >
         <HiOutlineShoppingBag />
         {cart.length > 0 && (
-          <span className="absolute -top-1 -right-2 bg-red-600 text-white text-[10px] rounded-full w-5 h-5 flex items-center justify-center z-50">
+          <span className="absolute top-0 right-0 translate-x-1/3 -translate-y-1/3 bg-red-600 text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full z-50">
             {cart.length}
           </span>
         )}
