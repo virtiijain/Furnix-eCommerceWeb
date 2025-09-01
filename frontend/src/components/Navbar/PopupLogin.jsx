@@ -1,30 +1,28 @@
 import { FaTimes } from "react-icons/fa";
-import img16 from "../../assets/img16.png";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import axios from "axios";
 
-const PopupSignup = ({ onClose }) => {
+const PopupLogin = ({ onClose }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // handleSubmit function
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
     try {
-      const response = await axios.post("http://localhost:5500/signup", {
+      const response = await axios.post("http://localhost:5500/login", {
         email,
         password,
       });
-      console.log("Signup successful:", response.data);  // Log response data
+      // Handle successful login (e.g., save token in localStorage, or cookies)
+      console.log(response.data);
       onClose(); // Close popup after success
     } catch (err) {
-      console.error("Error:", err);  // Log the full error
       setError(err.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
@@ -37,10 +35,8 @@ const PopupSignup = ({ onClose }) => {
         <button onClick={onClose} className="absolute top-2 right-2 text-xl">
           <FaTimes />
         </button>
-        <h2 className="text-xl font-medium mb-4 text-center">Create an account</h2>
-        <img src={img16} alt="Plant" className="w-24 h-24 mx-auto mb-6" />
-        <h2 className="text-base font-normal mb-4 text-center">Let’s get your account set up</h2>
-
+        <h2 className="text-xl font-medium mb-4 text-center">Login</h2>
+        
         {error && <p className="text-red-500 text-sm">{error}</p>}
 
         <form onSubmit={handleSubmit}>
@@ -71,21 +67,16 @@ const PopupSignup = ({ onClose }) => {
             className={`bg-yellow-900 text-white font-medium py-2 px-4 rounded-md w-full mb-2 ${loading ? 'opacity-50' : ''}`}
             disabled={loading}
           >
-            {loading ? "Creating account..." : "Create account"}
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
-
-        <label className="flex items-start text-xs font-light gap-1">
-          <input type="checkbox" className="mt-1" />
-          I agree to the Terms and Conditions and acknowledge the Privacy Policy
-        </label>
       </div>
     </section>
   );
 };
 
-export default PopupSignup;
+export default PopupLogin;
 
-PopupSignup.propTypes = {
+PopupLogin.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
