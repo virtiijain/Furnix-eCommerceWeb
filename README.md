@@ -30,6 +30,8 @@ Furnix is a sleek, responsive, and minimalistic e-commerce frontend built with *
   - Storing wishlist/cart items
   - Order processing
 
+```mermaid
+
 flowchart TD
     A[Visitor / Unauthenticated] -->|Signup| B[POST /api/auth/signup]
     A -->|Login| C[POST /api/auth/login + JWT]
