@@ -30,27 +30,4 @@ Furnix is a sleek, responsive, and minimalistic e-commerce frontend built with *
   - Storing wishlist/cart items
   - Order processing
 
-```mermaid
-
-flowchart TD
-    A[Visitor] --> B[Signup/Login]
-    B --> C[Normal User]
-    B --> D[Admin]
-
-    C --> E[Products]
-    C --> F[Cart]
-    C --> G[Orders]
-
-    D --> H[Manage Products]
-    D --> I[View Orders]
-    D --> J[Manage Users]
-
-    E --> K[Products DB]
-    F --> L[Cart DB]
-    G --> M[Orders DB]
-    J --> N[Users DB]
-
-
-
-
 >> Ongoing...
