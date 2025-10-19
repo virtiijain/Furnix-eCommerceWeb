@@ -36,19 +36,20 @@ flowchart TD
     A[Visitor] --> B[Signup/Login]
     B --> C[Normal User]
     B --> D[Admin]
-    
+
     C --> E[Products]
     C --> F[Cart]
     C --> G[Orders]
-    
+
     D --> H[Manage Products]
     D --> I[View Orders]
     D --> J[Manage Users]
-    
-    E --> K[Database: Products]
-    F --> L[Database: Cart]
-    G --> M[Database: Orders]
-    J --> N[Database: Users]
+
+    E --> K[Products DB]
+    F --> L[Cart DB]
+    G --> M[Orders DB]
+    J --> N[Users DB]
+
 
 
 
