@@ -1,11 +1,20 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const popupSlice = createSlice({
-  name: 'popup',
-  initialState: { isOpen: false },
+  name: "popup",
+  initialState: {
+    isOpen: false,
+    popupType: null, // can be "signup" or "login"
+  },
   reducers: {
-    openPopup: (state) => { state.isOpen = true; },
-    closePopup: (state) => { state.isOpen = false; },
+    openPopup: (state, action) => {
+      state.isOpen = true;
+      state.popupType = action.payload; // pass "signup" or "login"
+    },
+    closePopup: (state) => {
+      state.isOpen = false;
+      state.popupType = null;
+    },
   },
 });
 

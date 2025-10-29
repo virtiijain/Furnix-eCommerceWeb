@@ -1,82 +1,91 @@
-import { FaTimes } from "react-icons/fa";
-import PropTypes from "prop-types";
-import { useState } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 
 const PopupLogin = ({ onClose }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
 
     try {
-      const response = await axios.post("http://localhost:5500/login", {
-        email,
-        password,
+      const res = await fetch("http://localhost:5500/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
       });
-      // Handle successful login (e.g., save token in localStorage, or cookies)
-      console.log(response.data);
-      onClose(); // Close popup after success
+
+      const data = await res.json();
+
+      if (res.ok) {
+        // ✅ Save token + user
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+
+        // ✅ Alert success + close popup
+        alert(`Welcome back, ${data.user.name || "User"}!`);
+        onClose();
+
+        // ✅ Refresh to show "Hello, [name]"
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
+      } else {
+        alert(data.message || "Invalid credentials");
+      }
     } catch (err) {
-      setError(err.response?.data?.message || "Something went wrong");
+      console.error(err);
+      alert("Something went wrong. Try again later.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <section className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-10 z-50">
-      <div className="bg-white rounded-lg p-6 max-w-sm w-full relative">
-        <button onClick={onClose} className="absolute top-2 right-2 text-xl">
-          <FaTimes />
-        </button>
-        <h2 className="text-xl font-medium mb-4 text-center">Login</h2>
-        
-        {error && <p className="text-red-500 text-sm">{error}</p>}
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div className="bg-white p-6 rounded-md shadow-lg w-80 relative">
+        <h2 className="text-xl font-semibold mb-4 text-center">Sign In</h2>
 
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <input
-              type="email"
-              placeholder="Email"
-              className="w-full border border-gray-300 rounded-md p-2"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-
-          <div className="mb-4">
-            <input
-              type="password"
-              placeholder="Password"
-              className="w-full border border-gray-300 rounded-md p-2"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-
+        <form onSubmit={handleLogin} className="flex flex-col gap-3">
+          <input
+            type="email"
+            placeholder="Email"
+            className="border p-2 rounded-md"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            className="border p-2 rounded-md"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
           <button
             type="submit"
-            className={`bg-yellow-900 text-white font-medium py-2 px-4 rounded-md w-full mb-2 ${loading ? 'opacity-50' : ''}`}
+            className={`bg-yellow-900 text-white py-2 rounded-md transition-all ${
+              loading ? "opacity-60 cursor-not-allowed" : "hover:bg-yellow-800"
+            }`}
             disabled={loading}
           >
-            {loading ? "Logging in..." : "Login"}
+            {loading ? "Signing in..." : "Login"}
           </button>
         </form>
+
+        <button
+          onClick={onClose}
+          className="absolute top-2 right-3 text-gray-500 hover:text-gray-700"
+        >
+          ✕
+        </button>
       </div>
-    </section>
+    </div>
   );
 };
 
 export default PopupLogin;
-
-PopupLogin.propTypes = {
-  onClose: PropTypes.func.isRequired,
-};
