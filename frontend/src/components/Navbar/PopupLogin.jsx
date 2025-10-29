@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { IoClose } from "react-icons/io5"; 
 
 const PopupLogin = ({ onClose }) => {
   const [email, setEmail] = useState("");
@@ -81,7 +82,7 @@ const PopupLogin = ({ onClose }) => {
           onClick={onClose}
           className="absolute top-2 right-3 text-gray-500 hover:text-gray-700"
         >
-          ✕
+          <IoClose size={22} />
         </button>
       </div>
     </div>

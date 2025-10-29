@@ -1,5 +1,6 @@
 import FilterBar from "./FilterBar";
 import products from "../../content/shopContent.jsx";
+import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useWishlist } from "../../context/WishlistContext";
 import { useCart } from "../../context/CartContext";
@@ -23,13 +24,19 @@ const Products = () => {
         />
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {filteredProducts.map((product, index) => (
-            <div key={index} className="border border-slate-500 p-4 rounded-lg">
-              <img
-                src={product.image}
-                alt={product.name}
-                className="aspect-square object-cover rounded-md w-full"
-              />
-              <h2 className="sm:text-sm md:text-base lg:text-lg font-medium truncate">
+            <div
+              key={index}
+              className="border border-slate-500 p-4 rounded-lg hover:shadow-md transition"
+            >
+              <Link to={`/product/${product.id}`}>
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="aspect-square object-cover rounded-md w-full cursor-pointer"
+                />
+              </Link>
+
+              <h2 className="sm:text-sm md:text-base lg:text-lg font-medium truncate mt-2">
                 {product.name}
               </h2>
               <p className="text-gray-500 font-medium mb-2">{product.price}</p>
@@ -39,7 +46,7 @@ const Products = () => {
                   onClick={() => addToCart(product)}
                   className="border rounded-md px-4 py-2 text-[14px] text-white bg-yellow-900"
                 >
-                  Add to cart
+                  Add to Cart
                 </button>
                 <button
                   onClick={() => addToWishlist(product)}
@@ -57,4 +64,3 @@ const Products = () => {
 };
 
 export default Products;
-

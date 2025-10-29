@@ -1,4 +1,4 @@
-import { FaTimes } from "react-icons/fa";
+import { IoClose } from "react-icons/io5"; 
 import PropTypes from "prop-types";
 import { useState } from "react";
 import axios from "axios";
@@ -35,8 +35,8 @@ const PopupSignup = ({ onClose }) => {
   return (
     <section className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-10 z-50">
       <div className="bg-white rounded-lg p-6 max-w-sm w-full relative">
-        <button onClick={onClose} className="absolute top-2 right-2 text-xl">
-          <FaTimes />
+        <button onClick={onClose} className="absolute top-2 right-3 text-gray-500 hover:text-gray-700">
+          <IoClose size={22} />
         </button>
         <h2 className="text-xl font-medium mb-4 text-center">Create an account</h2>
 

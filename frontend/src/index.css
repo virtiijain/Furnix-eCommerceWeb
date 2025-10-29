@@ -10,3 +10,35 @@
   font-family: "Poppins", serif;
   scroll-behavior: smooth;
 }
+
+.swiper-pagination {
+  position: relative !important;
+  margin-top: 8px !important; /* pushes dots below the box */
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  color: #78350f !important; /* same brown tone */
+  transition: transform 0.3s ease;
+}
+
+@media (max-width: 640px) {
+  .swiper-button-next,
+  .swiper-button-prev {
+    transform: scale(0.6);
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1023px) {
+  .swiper-button-next,
+  .swiper-button-prev {
+    transform: scale(0.8);
+  }
+}
+
+@media (min-width: 1024px) {
+  .swiper-button-next,
+  .swiper-button-prev {
+    transform: scale(1);
+  }
+}
