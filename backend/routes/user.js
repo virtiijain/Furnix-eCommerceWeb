@@ -1,17 +1,14 @@
 import express from "express";
-import { verifyToken } from "../middleware/auth.js";
-import User from "../models/User.js";
+import { verifyToken } from "../middleware/verifyToken.js";
 
 const router = express.Router();
 
-// Get current user profile (protected)
-router.get("/profile", verifyToken, async (req, res) => {
-  try {
-    const user = await User.findById(req.user.id).select("-password"); // password hide
-    res.json(user);
-  } catch (err) {
-    res.status(500).json({ message: "Server error" });
-  }
+// Protected route
+router.get("/profile", verifyToken, (req, res) => {
+  res.json({
+    message: "Access granted ✅",
+    user: req.user, // this comes from verifyToken middleware
+  });
 });
 
 export default router;

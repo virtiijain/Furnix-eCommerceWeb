@@ -7,8 +7,8 @@ import Home from "./pages/Home";
 import Shop from "./pages/Shop";
 import ProductDetail from "./components/ShopComponent/ProductDetail";
 import Contact from "./pages/Contact";
-import WishList from "./pages/WishList";
-import Cart from "./pages/Cart";
+import CartPage from "./pages/CartPage";
+import WishlistPage from "./pages/WishlistPage";
 
 const App = () => {
   return (
@@ -22,8 +22,8 @@ const App = () => {
             <Route path="/shop/:category" element={<Shop />} />
             <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="/contact" element={<Contact />} />
-            <Route path="/wishlist" element={<WishList />} />
-            <Route path="/cart" element={<Cart />} />
+            <Route path="/cart" element={<CartPage />} />
+            <Route path="/wishlist" element={<WishlistPage />} />
           </Routes>
           <Footer />
         </WishlistProvider>

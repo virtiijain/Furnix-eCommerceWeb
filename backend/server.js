@@ -4,7 +4,10 @@ import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/authRoutes.js";
-import userRoutes from "./routes/user.js"
+import userRoutes from "./routes/user.js";
+import productRoutes from "./routes/productRoutes.js";
+import cartRoutes from "./routes/cartRoutes.js";
+import wishlistRoutes from "./routes/wishlistRoutes.js";
 dotenv.config();
 
 const app = express();
@@ -17,6 +20,7 @@ app.use(
   cors({
     credentials: true,
     origin: "http://localhost:5173", // your frontend URL
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
@@ -26,9 +30,12 @@ mongoose
   .then(() => console.log("MongoDB Connected Successfully"))
   .catch((err) => console.error("MongoDB Connection Error:", err));
 
-  app.use(express.json());
-  app.use("/auth", authRoutes);
-  app.use("/user", userRoutes);
+app.use("/auth", authRoutes);
+app.use("/user", userRoutes);
+app.use("/api/products", productRoutes);
+app.use("/api/cart", cartRoutes);
+app.use("/api/wishlist", wishlistRoutes);
+app.use("/images", express.static("images"));
 
 // Root check route (optional, for testing connection)
 app.get("/", (req, res) => {

@@ -25,18 +25,48 @@ const Navbar = () => {
   useOutsideClick(menuRef, () => setIsMobileMenuOpen(false), isMobileMenuOpen);
   useOutsideClick(dropdownRef, () => setDropdownOpen(false), dropdownOpen);
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    const storedToken = localStorage.getItem("token");
+  // useEffect(() => {
+  //   const storedUser = localStorage.getItem("user");
+  //   const storedToken = localStorage.getItem("token");
 
-    if (storedUser && storedToken) {
-      setUser(JSON.parse(storedUser));
-      setToken(storedToken);
-    } else {
-      setUser(null);
-      setToken(null);
-    }
-  }, [isOpen]);
+  //   if (storedUser && storedToken) {
+  //     setUser(JSON.parse(storedUser));
+  //     setToken(storedToken);
+  //   } else {
+  //     setUser(null);
+  //     setToken(null);
+  //   }
+  // }, [isOpen]);
+
+  useEffect(() => {
+  const storedToken = localStorage.getItem("token");
+
+  if (storedToken) {
+    fetch("http://localhost:5500/user/profile", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${storedToken}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.user) {
+          setUser(data.user);
+          setToken(storedToken);
+        } else {
+          console.log("Token invalid or expired");
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          setUser(null);
+        }
+      })
+      .catch((err) => console.error("Error verifying token:", err));
+  } else {
+    setUser(null);
+    setToken(null);
+  }
+}, []);
+
 
   const handleLogout = () => {
     localStorage.removeItem("token");
