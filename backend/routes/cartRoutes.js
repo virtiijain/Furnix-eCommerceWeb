@@ -3,29 +3,38 @@ import Cart from "../models/Cart.js";
 
 const router = express.Router();
 
-// ✅ POST: Add item to cart
+// POST: Add item to cart
 router.post("/", async (req, res) => {
   try {
-    const { userId, productId } = req.body;
+    const { userId, productId, quantity } = req.body;
+
+    if (!userId || !productId) {
+      return res.status(400).json({ message: "Missing userId or productId" });
+    }
+
     let cart = await Cart.findOne({ userId });
 
     if (!cart) {
-      cart = new Cart({ userId, items: [{ productId }] });
+      cart = new Cart({ userId, items: [{ productId, quantity }] });
     } else {
-      const exists = cart.items.some(
-        (item) => item.productId.toString() === productId
+      const item = cart.items.find(
+        (i) => i.productId.toString() === productId
       );
-      if (!exists) cart.items.push({ productId });
+      if (item) {
+        item.quantity += 1;
+      } else {
+        cart.items.push({ productId, quantity });
+      }
     }
 
     await cart.save();
-    res.json({ message: "Added to cart successfully!" });
+    res.json({ message: "Added to cart successfully!", cart });
   } catch (err) {
     res.status(500).json({ message: "Error adding to cart", error: err.message });
   }
 });
 
-// ✅ GET: Fetch user cart
+// GET: Fetch user cart
 router.get("/:userId", async (req, res) => {
   try {
     const cart = await Cart.findOne({ userId: req.params.userId })

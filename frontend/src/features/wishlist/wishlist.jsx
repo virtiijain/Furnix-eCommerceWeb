@@ -1,25 +1,42 @@
 import { useEffect, useState } from "react";
 import { Heart } from "lucide-react";
 import WishlistItem from "../wishlist/components/WishlistItem";
-import { getWishlist, removeFromWishlist, moveToCart } from "../../api/wishlist";
+import {
+  getWishlist,
+  removeFromWishlist,
+  moveToCart,
+} from "../../api/wishlist";
 
 const Wishlist = () => {
   const [wishlistItems, setWishlistItems] = useState([]);
-  const userId = "674c72c24fd99b0fbd908a11";
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getWishlist(userId);
-        setWishlistItems(data.items || []);
-      } catch (err) {
-        console.error("Error fetching wishlist:", err);
-      }
-    };
-    fetchData();
-  }, []);
+  const storedUser = localStorage.getItem("user");
+  const user = storedUser ? JSON.parse(storedUser) : null;
+  const id = user?._id;
+  setUserId(id);
+
+  if (!userId) {
+    console.warn("No user logged in — can't fetch wishlist");
+    return;
+  }
+
+  const fetchData = async () => {
+    try {
+      const data = await getWishlist(id);
+      setWishlistItems(data.items || []);
+    } catch (err) {
+      console.error("Error fetching wishlist:", err);
+    }
+  };
+
+  fetchData();
+}, [userId]); // this can stay empty since userId comes from localStorage
+
 
   const handleRemove = async (productId) => {
+    if (!userId) return alert("Login first!");
     try {
       await removeFromWishlist(userId, productId);
       setWishlistItems((prev) =>
@@ -31,6 +48,7 @@ const Wishlist = () => {
   };
 
   const handleMoveToCart = async (productId) => {
+    if (!userId) return alert("Login first!");
     try {
       const data = await moveToCart(userId, productId);
       if (data) await handleRemove(productId);

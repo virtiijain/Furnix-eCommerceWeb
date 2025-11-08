@@ -3,7 +3,13 @@ import OrderCard from "../orders/components/OrderCard";
 
 const MyOrders = () => {
   const [orders, setOrders] = useState([]);
-  const userId = "674c72c24fd99b0fbd908a11";
+  const [userId, setUserId] = useState(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    const user = storedUser ? JSON.parse(storedUser) : null;
+    setUserId(user?._id);
+  }, []);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -26,9 +32,7 @@ const MyOrders = () => {
         </h2>
 
         {orders.length === 0 ? (
-          <p className="text-gray-500 text-center mt-10">
-            No orders found yet 
-          </p>
+          <p className="text-gray-500 text-center mt-10">No orders found yet</p>
         ) : (
           <div className="space-y-5">
             {orders.map((order) => (

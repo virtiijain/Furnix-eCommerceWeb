@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { IoClose } from "react-icons/io5"; 
+import { IoClose } from "react-icons/io5";
 
 const PopupLogin = ({ onClose }) => {
   const [email, setEmail] = useState("");
@@ -22,15 +22,14 @@ const PopupLogin = ({ onClose }) => {
       const data = await res.json();
 
       if (res.ok) {
-        // ✅ Save token + user
-        localStorage.setItem("token", data.token);
+        // ✅ Save user and token properly
         localStorage.setItem("user", JSON.stringify(data.user));
+        localStorage.setItem("token", data.token);
 
-        // ✅ Alert success + close popup
         alert(`Welcome back, ${data.user.name || "User"}!`);
         onClose();
 
-        // ✅ Refresh to show "Hello, [name]"
+        // ✅ Refresh to update UI
         setTimeout(() => {
           window.location.reload();
         }, 500);

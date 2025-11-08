@@ -1,6 +1,6 @@
 import express from "express";
 import Order from "../models/Orders.js";
-import Cart from "../models/Cart.js"; // ✅ make sure to import your Cart model
+import Cart from "../models/Cart.js"; 
 
 const router = express.Router();
 

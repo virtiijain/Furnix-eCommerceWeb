@@ -1,4 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import PropTypes from "prop-types";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import { WishlistProvider } from "./shared/context/WishlistContext";
 import { CartProvider } from "./shared/context/CartContext";
 import Navbar from "./shared/components/Navbar/Navbar";
@@ -13,27 +14,44 @@ import Checkout from "./features/checkout/checkout";
 import Settings from "./features/settings/Settings";
 import HelpSupport from "./features/help&support/HelpSupport"
 import MyOrders from "./features/orders/orders";
+import Dashboard from "./features/admin/Dashboard";
+import AdminLogin from "./features/admin/components/AdminLogin";
+
+const Layout = ({ children }) => {
+  const location = useLocation();
+  const isAdmin = location.pathname.startsWith("/dashboard");
+
+  return (
+    <>
+      {!isAdmin && <Navbar />}
+      {children}
+      {!isAdmin && <Footer />}
+    </>
+  );
+};
 
 const App = () => {
   return (
     <Router>
       <CartProvider>
         <WishlistProvider>
-          <Navbar />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/shop" element={<Shop />} />
-            <Route path="/shop/:category" element={<Shop />} />
-            <Route path="/product/:id" element={<ProductDetail />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/wishlist" element={<Wishlist />} />
-            <Route path="/checkout" element={<Checkout />} />
-            <Route path="/orders" element={<MyOrders />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/help" element={<HelpSupport />} />
-          </Routes>
-          <Footer />
+          <Layout>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/shop" element={<Shop />} />
+              <Route path="/shop/:category" element={<Shop />} />
+              <Route path="/product/:id" element={<ProductDetail />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/wishlist" element={<Wishlist />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/orders" element={<MyOrders />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/help" element={<HelpSupport />} />
+              <Route path="/admin/dashboard" element={<Dashboard />} />
+               <Route path="/admin/login" element={<AdminLogin />} />
+            </Routes>
+          </Layout>
         </WishlistProvider>
       </CartProvider>
     </Router>
@@ -41,3 +59,7 @@ const App = () => {
 };
 
 export default App;
+
+Layout.propTypes = {
+  children: PropTypes.node.isRequired,
+};

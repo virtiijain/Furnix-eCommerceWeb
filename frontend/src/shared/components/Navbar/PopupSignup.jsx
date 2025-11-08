@@ -1,4 +1,4 @@
-import { IoClose } from "react-icons/io5"; 
+import { IoClose } from "react-icons/io5";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import axios from "axios";
@@ -21,11 +21,24 @@ const PopupSignup = ({ onClose }) => {
         email,
         password,
       });
-      
-      console.log("Signup success:", res.data); // backend response
-      localStorage.setItem("token", res.data.token); // JWT save in localStorage
-      onClose(); // close popup
+
+      const { token, user } = res.data;
+
+      if (!token || !user?._id) {
+        throw new Error("Signup response incomplete. Please login manually.");
+      }
+
+      // ✅ Save both token and user to localStorage
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+
+      console.log("Signup success:", user);
+
+      alert(`Welcome, ${user.name || "User"} 🎉`);
+      onClose();
+      window.location.reload(); // instantly refresh UI (fixes mobile issue too)
     } catch (err) {
+      console.error("Signup error:", err);
       setError(err.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
@@ -35,10 +48,15 @@ const PopupSignup = ({ onClose }) => {
   return (
     <section className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-10 z-50">
       <div className="bg-white rounded-lg p-6 max-w-sm w-full relative">
-        <button onClick={onClose} className="absolute top-2 right-3 text-gray-500 hover:text-gray-700">
+        <button
+          onClick={onClose}
+          className="absolute top-2 right-3 text-gray-500 hover:text-gray-700"
+        >
           <IoClose size={22} />
         </button>
-        <h2 className="text-xl font-medium mb-4 text-center">Create an account</h2>
+        <h2 className="text-xl font-medium mb-4 text-center">
+          Create an account
+        </h2>
 
         {error && <p className="text-red-500 text-sm">{error}</p>}
 
@@ -70,7 +88,9 @@ const PopupSignup = ({ onClose }) => {
 
           <button
             type="submit"
-            className={`bg-yellow-900 text-white font-medium py-2 px-4 rounded-md w-full mb-2 ${loading ? 'opacity-50' : ''}`}
+            className={`bg-yellow-900 text-white font-medium py-2 px-4 rounded-md w-full mb-2 ${
+              loading ? "opacity-50" : ""
+            }`}
             disabled={loading}
           >
             {loading ? "Creating account..." : "Create account"}

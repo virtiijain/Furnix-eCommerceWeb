@@ -7,10 +7,16 @@ const Products = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [message, setMessage] = useState("");
 
-  // fake logged-in user (replace with real auth later)
-  const userId = "674c72c24fd99b0fbd908a11";
+  // ✅ Get userId + token safely
+  const storedUser = localStorage.getItem("user");
+  const user = storedUser ? JSON.parse(storedUser) : null;
+  const token = localStorage.getItem("token");
+  const userId = user?._id;
 
-  // Fetch all products
+  // ✅ Check if logged in before trying anything
+  const isLoggedIn = Boolean(userId && token);
+
+  // Fetch products
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -26,16 +32,25 @@ const Products = () => {
 
   // ✅ Add to Cart
   const handleAddToCart = async (productId) => {
+    if (!isLoggedIn) {
+      alert("Please login first!");
+      return;
+    }
+
     try {
       const res = await fetch("http://localhost:5500/api/cart", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({ userId, productId, quantity: 1 }),
       });
 
-      if (!res.ok) throw new Error("Failed to add to cart");
-
       const data = await res.json();
+
+      if (!res.ok) throw new Error(data.message || "Failed to add to cart");
+
       setMessage("Product added to cart!");
       console.log("Cart Updated:", data);
 
@@ -48,16 +63,25 @@ const Products = () => {
 
   // ✅ Add to Wishlist
   const handleAddToWishlist = async (productId) => {
+    if (!isLoggedIn) {
+      alert("Please login first!");
+      return;
+    }
+
     try {
       const res = await fetch("http://localhost:5500/api/wishlist", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({ userId, productId }),
       });
 
-      if (!res.ok) throw new Error("Failed to add to wishlist");
-
       const data = await res.json();
+
+      if (!res.ok) throw new Error(data.message || "Failed to add to wishlist");
+
       setMessage("Added to wishlist!");
       console.log("Wishlist Updated:", data);
 

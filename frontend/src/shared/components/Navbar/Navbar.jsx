@@ -26,41 +26,50 @@ const Navbar = () => {
   useOutsideClick(dropdownRef, () => setDropdownOpen(false), dropdownOpen);
 
   useEffect(() => {
-  const storedToken = localStorage.getItem("token");
+    const storedToken = localStorage.getItem("token");
 
-  if (storedToken) {
-    fetch("http://localhost:5500/user/profile", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${storedToken}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.user) {
-          setUser(data.user);
-          setToken(storedToken);
-        } else {
-          console.log("Token invalid or expired");
-          localStorage.removeItem("token");
-          localStorage.removeItem("user");
-          setUser(null);
-        }
+    if (storedToken) {
+      fetch("http://localhost:5500/user/profile", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${storedToken}`,
+        },
       })
-      .catch((err) => console.error("Error verifying token:", err));
-  } else {
-    setUser(null);
-    setToken(null);
-  }
-}, []);
-
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.user) {
+            setUser(data.user);
+            setToken(storedToken);
+          } else {
+            console.log("Token invalid or expired");
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            setUser(null);
+          }
+        })
+        .catch((err) => console.error("Error verifying token:", err));
+    } else {
+      setUser(null);
+      setToken(null);
+    }
+  }, [token]);
 
   const handleLogout = () => {
+    // remove user data from storage
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+
+    // if you store cart or wishlist anywhere locally, clear those too
+    localStorage.removeItem("cart");
+    localStorage.removeItem("wishlist");
+
+    // reset states
     setUser(null);
     setToken(null);
     setDropdownOpen(false);
+
+    // reload page to reset UI completely
+    window.location.reload();
   };
 
   return (

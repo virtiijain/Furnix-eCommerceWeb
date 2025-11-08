@@ -1,33 +1,43 @@
-# Furnix – eCommerce Website
+## Description
+This modern e-commerce web application built using the **MERN Stack**.  
+It offers a smooth shopping experience where users can browse products, add items to cart or wishlist, manage orders, and securely checkout — all within a clean and responsive interface.  
+The project also includes a **fully functional Admin Panel** and is now being enhanced with **DevOps integration** for automated deployment and production-ready workflows.
 
-Furnix is a sleek, responsive, and minimalistic e-commerce frontend built with **React.js** and **Tailwind CSS**. It offers a smooth user experience with wishlist and cart functionalities, popup signup, and responsive mobile navigation. Designed with clean UI/UX and deployed via Netlify, this project highlights component-based architecture, Redux state management, and custom hooks.
+---
+
+## Functionality
+- Browse premium product collections  
+- Add or remove items from the cart  
+- Save or remove favorites in wishlist  
+- View and manage orders  
+- Secure authentication and validation for **users and admin**  
+- Admin Panel to:
+  - Manage furniture products (Add, Edit, Delete)
+  - View and manage customer orders
+  - Handle user accounts and authentication
+  - Monitor sales and analytics  
+- Smooth checkout process  
+- Fully responsive and user-friendly UI  
+
+---
+
+## DevOps Features (In Progress)
+- **Automated Deployment:** Frontend hosted on **Netlify**, backend on **Render / Vercel** with CI/CD via **GitHub Actions**  
+- **Dockerized Application:** Frontend and backend containerized for consistent environment setup  
+- **Environment Management:** Secure handling of environment variables for database and API keys  
+- **Monitoring & Logging:** Track errors and server performance  
+- **Scalability Ready:** Structured to handle increased traffic and easy environment replication  
+
+---
 
 ## Tech Stack
 
-### Frontend
-- **React.js** – Component-based architecture for fast UI rendering
-- **Tailwind CSS** – Utility-first CSS framework for styling
-- **React Router DOM** – For client-side routing and navigation
-- **React Icons** – Icon library for UI elements
+| Category | Technologies Used |
+|-----------|-------------------|
+| **Frontend** | React.js, Vite, Tailwind CSS |
+| **Backend** | Node.js, Express.js |
+| **Database** | MongoDB |
+| **State Management** | React Hooks / Context API |
+| **Authentication** | JWT, bcrypt, Express Validator |
+| **DevOps / Deployment** | Docker, GitHub Actions (CI/CD), Netlify (Frontend), Render / Vercel (Backend) |
 
-### State Management
-- **Redux Toolkit** – Efficient global state management
-- **React-Redux** – To connect Redux with React components
-
-### Functionality
-- **Custom Context & Hooks** – For Wishlist and Cart logic  
-- **Responsive Design** – Mobile-first, fully responsive UI  
-- **Popup/Modal System** – Built using conditional rendering and Redux  
-- **Form Handling** – Basic forms with client-side validation  
-- **Product Filtering** – Users can filter and view products by category  
-
-### Deployment & Tools
-- **Netlify** – Deployment
-- **Git & GitHub** – Version control
-
-**Backend Integration (soon)** for:
-  - User authentication
-  - Storing wishlist/cart items
-  - Order processing
-
->> Ongoing...

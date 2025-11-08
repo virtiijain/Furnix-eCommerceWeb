@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import PaymentModal from "../../shared/components/common/PaymentModal"
+import PaymentModal from "../../shared/components/common/PaymentModal";
 import OrderSummary from "../checkout/components/OrderSummary";
 import CheckoutDetails from "../checkout/components/CheckoutDetails";
 
@@ -10,9 +10,13 @@ const Checkout = () => {
   const [showModal, setShowModal] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
   const navigate = useNavigate();
-  const userId = "674c72c24fd99b0fbd908a11";
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    const user = storedUser ? JSON.parse(storedUser) : null;
+    setUserId(user?._id);
+
     const data = JSON.parse(localStorage.getItem("checkoutData"));
     if (!data) navigate("/cart");
     else setCheckoutData(data);
@@ -42,11 +46,18 @@ const Checkout = () => {
   };
 
   const handleConfirmOrder = async () => {
+    if (!userId) {
+      setSuccessMsg("Please log in first.");
+      setTimeout(() => setSuccessMsg(""), 2000);
+      return;
+    }
+
     if (!address.trim()) {
       setSuccessMsg("Please enter your address.");
       setTimeout(() => setSuccessMsg(""), 2000);
       return;
     }
+
     try {
       const res = await fetch("http://localhost:5500/api/orders", {
         method: "POST",
@@ -61,10 +72,11 @@ const Checkout = () => {
           address,
         }),
       });
+
       const data = await res.json();
       console.log("Order placed:", data);
       localStorage.removeItem("checkoutData");
-      setSuccessMsg("✅ Order placed successfully!");
+      setSuccessMsg("Order placed successfully!");
       setTimeout(() => {
         setSuccessMsg("");
         navigate("/orders");
@@ -81,21 +93,39 @@ const Checkout = () => {
   return (
     <>
       <section className="min-h-screen bg-gray-50 p-4 sm:p-6">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-[2fr,1fr] gap-6 sm:gap-8">
-          <OrderSummary
-            cartItems={checkoutData.cartItems}
-            onQuantityChange={handleQuantityChange}
-            onRemove={handleRemoveItem}
-          />
-          <CheckoutDetails
-            address={address}
-            setAddress={setAddress}
-            totalPrice={checkoutData.totalPrice}
-            onConfirm={() => setShowModal(true)}
-          />
+        <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8">
+          <h2 className="text-3xl font-semibold text-gray-800 text-center">
+            Checkout
+          </h2>
+
+          {/* Order Summary */}
+          <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6 border">
+            <h3 className="text-xl font-semibold mb-4 text-gray-700">
+              Your Order
+            </h3>
+            <OrderSummary
+              cartItems={checkoutData.cartItems}
+              onQuantityChange={handleQuantityChange}
+              onRemove={handleRemoveItem}
+            />
+          </div>
+
+          {/* Delivery & Payment */}
+          <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6 border">
+            <h3 className="text-xl font-semibold mb-4 text-gray-700">
+              Delivery & Payment
+            </h3>
+            <CheckoutDetails
+              address={address}
+              setAddress={setAddress}
+              totalPrice={checkoutData.totalPrice}
+              onConfirm={() => setShowModal(true)}
+            />
+          </div>
         </div>
       </section>
 
+      {/* Payment Modal */}
       {showModal && (
         <PaymentModal
           totalPrice={checkoutData.totalPrice}
@@ -104,11 +134,22 @@ const Checkout = () => {
         />
       )}
 
+      {/* Success Message */}
       {successMsg && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-yellow-900 text-white px-6 py-3 rounded-lg shadow-lg text-sm sm:text-base">
           {successMsg}
         </div>
       )}
+
+      {/* Mobile Sticky Button */}
+      <div className="sticky bottom-0 bg-white border-t p-4 sm:hidden">
+        <button
+          onClick={() => setShowModal(true)}
+          className="w-full bg-yellow-700 hover:bg-yellow-800 text-white py-3 rounded-lg font-medium transition-all duration-300"
+        >
+          Proceed to Payment ₹{checkoutData.totalPrice}
+        </button>
+      </div>
     </>
   );
 };

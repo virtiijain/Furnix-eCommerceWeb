@@ -6,7 +6,8 @@ import SummaryCard from "../cart/components/SummaryCard";
 import { useCart } from "../../shared/hooks/useCart";
 
 const Cart = () => {
-  const userId = "674c72c24fd99b0fbd908a11";
+  const user = JSON.parse(localStorage.getItem("user"));
+  const userId = user?._id;
   const navigate = useNavigate();
 
   const { cartItems, handleQuantityChange, handleRemove, totalPrice } =
