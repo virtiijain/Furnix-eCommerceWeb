@@ -2,6 +2,7 @@ import { IoClose } from "react-icons/io5";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import axios from "axios";
+import Notification from "../../../shared/components/common/Notification"; // adjust path
 
 const PopupSignup = ({ onClose }) => {
   const [name, setName] = useState("");
@@ -9,6 +10,10 @@ const PopupSignup = ({ onClose }) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [notification, setNotification] = useState({
+    message: "",
+    type: "success",
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,18 +33,30 @@ const PopupSignup = ({ onClose }) => {
         throw new Error("Signup response incomplete. Please login manually.");
       }
 
-      // ✅ Save both token and user to localStorage
+      // Save token & user
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
 
-      console.log("Signup success:", user);
+      // Show notification instead of alert
+      const userName = user?.name || user?.email || "User";
+      setNotification({ message: `Welcome, ${userName}`, type: "success" });
 
-      alert(`Welcome, ${user.name || "User"} 🎉`);
-      onClose();
-      window.location.reload(); // instantly refresh UI (fixes mobile issue too)
+      // auto-close popup & notification
+      setTimeout(() => {
+        setNotification({ message: "", type: "success" });
+        onClose();
+        window.location.reload();
+      }, 2000);
     } catch (err) {
       console.error("Signup error:", err);
       setError(err.response?.data?.message || "Something went wrong");
+      setNotification({
+        message: err.response?.data?.message || "Something went wrong",
+        type: "error",
+      });
+
+      // auto-hide error notification
+      setTimeout(() => setNotification({ message: "", type: "success" }), 3000);
     } finally {
       setLoading(false);
     }
@@ -47,6 +64,12 @@ const PopupSignup = ({ onClose }) => {
 
   return (
     <section className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-10 z-50">
+      <Notification
+        message={notification.message}
+        type={notification.type}
+        onClose={() => setNotification({ message: "", type: "success" })}
+      />
+
       <div className="bg-white rounded-lg p-6 max-w-sm w-full relative">
         <button
           onClick={onClose}
@@ -58,7 +81,7 @@ const PopupSignup = ({ onClose }) => {
           Create an account
         </h2>
 
-        {error && <p className="text-red-500 text-sm">{error}</p>}
+        {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
 
         <form onSubmit={handleSubmit}>
           <input
@@ -101,8 +124,8 @@ const PopupSignup = ({ onClose }) => {
   );
 };
 
-export default PopupSignup;
-
 PopupSignup.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
+
+export default PopupSignup;

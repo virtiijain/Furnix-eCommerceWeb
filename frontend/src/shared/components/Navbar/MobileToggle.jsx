@@ -1,39 +1,26 @@
 import { CiMenuFries } from "react-icons/ci";
 import { FaUserCircle } from "react-icons/fa";
 import PropTypes from "prop-types";
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import UserMenu from "./UserMenu";
 
-const MobileToggle = ({ onToggle }) => {
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
+const MobileToggle = ({ onToggle, user, token, handleLogout, showNotification }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
   useOutsideClick(dropdownRef, () => setDropdownOpen(false), dropdownOpen);
 
+  // Close dropdown automatically if user logs out
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    const storedToken = localStorage.getItem("token");
-    if (storedUser && storedToken) {
-      setUser(JSON.parse(storedUser));
-      setToken(storedToken);
+    if (!token || !user) {
+      setDropdownOpen(false);
     }
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    setUser(null);
-    setToken(null);
-    setDropdownOpen(false);
-    window.location.reload();
-  };
+  }, [token, user]);
 
   return (
     <div className="md:hidden flex items-center space-x-4 relative">
-      {token && (
+      {token && user ? (
         <div className="relative" ref={dropdownRef}>
           <FaUserCircle
             size={28}
@@ -44,11 +31,11 @@ const MobileToggle = ({ onToggle }) => {
             <UserMenu
               user={user}
               handleLogout={handleLogout}
-              onClose={() => setDropdownOpen(false)}
+              showNotification={showNotification}
             />
           )}
         </div>
-      )}
+      ) : null}
 
       <button onClick={onToggle}>
         <CiMenuFries size={26} />
@@ -57,8 +44,12 @@ const MobileToggle = ({ onToggle }) => {
   );
 };
 
-export default MobileToggle;
-
 MobileToggle.propTypes = {
   onToggle: PropTypes.func.isRequired,
+  user: PropTypes.object,
+  token: PropTypes.string,
+  handleLogout: PropTypes.func.isRequired,
+  showNotification: PropTypes.func.isRequired,
 };
+
+export default MobileToggle;

@@ -2,11 +2,20 @@ import { useNavigate } from "react-router-dom";
 import { FiShoppingBag, FiHeart, FiShoppingCart, FiSettings, FiHelpCircle, FiLogOut } from "react-icons/fi";
 import PropTypes from "prop-types";
 
-const UserMenu = ({ user, handleLogout }) => {
+const UserMenu = ({ user, handleLogout, showNotification }) => {
   const navigate = useNavigate();
+
+  const handleSignOut = () => {
+    handleLogout(); // clear user/token
+    if (showNotification) {
+      showNotification("You have successfully logged out!", "success");
+    }
+    navigate("/"); // redirect to home after logout
+  };
 
   return (
     <div className="absolute right-0 mt-3 w-64 bg-white border border-gray-200 rounded-xl shadow-xl overflow-hidden z-50 animate-fadeIn">
+
       {/* User Header */}
       <div className="px-4 py-3 border-b flex items-center gap-3">
         <div className="w-10 h-10 bg-yellow-900 text-white flex items-center justify-center rounded-full font-semibold">
@@ -14,7 +23,7 @@ const UserMenu = ({ user, handleLogout }) => {
         </div>
         <div>
           <p className="font-medium text-gray-800">
-            Hello, {user?.name?.split(" ")[0] || "User"} 👋
+            Hello, {user?.name ? user.name.split(" ")[0] : "User"} 👋
           </p>
           <p
             onClick={() => navigate("/account")}
@@ -37,7 +46,7 @@ const UserMenu = ({ user, handleLogout }) => {
       {/* Logout */}
       <div className="border-t">
         <button
-          onClick={handleLogout}
+          onClick={handleSignOut}
           className="w-full flex items-center gap-3 px-4 py-2 text-red-500 hover:bg-red-50 font-medium"
         >
           <FiLogOut /> Sign Out
@@ -66,6 +75,7 @@ MenuButton.propTypes = {
 UserMenu.propTypes = {
   user: PropTypes.object,
   handleLogout: PropTypes.func.isRequired,
+  showNotification: PropTypes.func.isRequired,
 };
 
 export default UserMenu;

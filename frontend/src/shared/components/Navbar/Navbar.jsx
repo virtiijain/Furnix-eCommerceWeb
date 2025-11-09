@@ -9,25 +9,29 @@ import { FaUserCircle } from "react-icons/fa";
 import { openPopup, closePopup } from "../../redux/popupSlice";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import UserMenu from "./UserMenu";
+import Notification from "../common/Notification";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [notification, setNotification] = useState({
+    message: "",
+    type: "success",
+  });
   const dispatch = useDispatch();
   const { isOpen, popupType } = useSelector((state) => state.popup);
 
-  // 🧠 These must come *before* using them anywhere
   const menuRef = useRef(null);
   const dropdownRef = useRef(null);
 
   useOutsideClick(menuRef, () => setIsMobileMenuOpen(false), isMobileMenuOpen);
   useOutsideClick(dropdownRef, () => setDropdownOpen(false), dropdownOpen);
 
+  // Get user profile if token exists
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
-
     if (storedToken) {
       fetch("http://localhost:5500/user/profile", {
         method: "GET",
@@ -41,35 +45,24 @@ const Navbar = () => {
             setUser(data.user);
             setToken(storedToken);
           } else {
-            console.log("Token invalid or expired");
             localStorage.removeItem("token");
             localStorage.removeItem("user");
             setUser(null);
+            setToken(null);
           }
         })
-        .catch((err) => console.error("Error verifying token:", err));
-    } else {
-      setUser(null);
-      setToken(null);
+        .catch((err) => console.error(err));
     }
-  }, [token]);
+  }, []);
 
   const handleLogout = () => {
-    // remove user data from storage
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-
-    // if you store cart or wishlist anywhere locally, clear those too
     localStorage.removeItem("cart");
     localStorage.removeItem("wishlist");
-
-    // reset states
     setUser(null);
     setToken(null);
     setDropdownOpen(false);
-
-    // reload page to reset UI completely
-    window.location.reload();
   };
 
   return (
@@ -92,7 +85,13 @@ const Navbar = () => {
               onClick={() => setDropdownOpen(!dropdownOpen)}
             />
             {dropdownOpen && (
-              <UserMenu user={user} handleLogout={handleLogout} />
+              <UserMenu
+                user={user}
+                handleLogout={handleLogout}
+                showNotification={(msg, type) =>
+                  setNotification({ message: msg, type })
+                }
+              />
             )}
           </div>
         ) : (
@@ -114,7 +113,15 @@ const Navbar = () => {
       </div>
 
       {/* Mobile Menu */}
-      <MobileToggle onToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)} />
+      <MobileToggle
+        onToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        user={user}
+        token={token}
+        handleLogout={handleLogout}
+        showNotification={(msg, type) =>
+          setNotification({ message: msg, type })
+        }
+      />
       <MobileNav
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
@@ -129,6 +136,13 @@ const Navbar = () => {
       {isOpen && popupType === "login" && (
         <PopupLogin onClose={() => dispatch(closePopup())} />
       )}
+
+      {/* Notifications */}
+      <Notification
+        message={notification.message}
+        type={notification.type}
+        onClose={() => setNotification({ message: "", type: "success" })}
+      />
     </nav>
   );
 };

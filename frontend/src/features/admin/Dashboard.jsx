@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Sidebar from "./components/Sidebar";
+import AdminNavbar from "../admin/components/AdminNavbar";
+import Notification from "../../shared/components/common/Notification";
 
 const Dashboard = () => {
   const [users, setUsers] = useState([]);
@@ -11,21 +13,29 @@ const Dashboard = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [editingProduct, setEditingProduct] = useState(null);
   const [editData, setEditData] = useState({ name: "", price: 0, image: "" });
+  const [notification, setNotification] = useState({
+    message: "",
+    type: "success",
+  });
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleSidebar = () => setIsOpen((prev) => !prev);
 
   // Fetch all data
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem("adminToken"); // get the token
+        const token = localStorage.getItem("adminToken");
         if (!token) {
-          window.location.href = "/admin/login"; // redirect if no token
+          setNotification({
+            message: "Please login to continue.",
+            type: "error",
+          });
+          setTimeout(() => (window.location.href = "/admin/login"), 1500);
           return;
         }
 
-        const config = {
-          headers: { Authorization: `Bearer ${token}` }, // attach token
-        };
-
+        const config = { headers: { Authorization: `Bearer ${token}` } };
         const [usersRes, ordersRes, productsRes, cartsRes] = await Promise.all([
           axios.get("http://localhost:5500/api/admin/users", config),
           axios.get("http://localhost:5500/api/admin/orders", config),
@@ -38,18 +48,21 @@ const Dashboard = () => {
         setProducts(productsRes.data);
         setCarts(cartsRes.data);
       } catch (err) {
-        console.error("Error fetching admin data:", err);
+        console.error(err);
         if (err.response?.status === 401) {
-          alert("Session expired. Please login again.");
-          window.location.href = "/admin/login";
+          setNotification({
+            message: "Session expired. Please login again.",
+            type: "error",
+          });
+          setTimeout(() => (window.location.href = "/admin/login"), 1500);
+        } else {
+          setNotification({ message: "Error fetching data.", type: "error" });
         }
       }
     };
-
     fetchData();
   }, []);
 
-  // Analytics
   const totalRevenue = orders.reduce(
     (sum, order) =>
       sum +
@@ -60,40 +73,64 @@ const Dashboard = () => {
     0
   );
 
-  // User Actions
+  // ---------- User Actions ----------
   const handleDeleteUser = async (id) => {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
     try {
-      await axios.delete(`http://localhost:5500/api/admin/users/${id}`);
+      const token = localStorage.getItem("adminToken");
+      const config = { headers: { Authorization: `Bearer ${token}` } };
+      await axios.delete(`http://localhost:5500/api/admin/users/${id}`, config);
       setUsers(users.filter((u) => u._id !== id));
       setOrders(orders.filter((o) => o.userId?._id !== id));
       setCarts(carts.filter((c) => c.userId?._id !== id));
+      setNotification({
+        message: "User deleted successfully.",
+        type: "success",
+      });
     } catch (err) {
       console.error(err);
+      setNotification({ message: "Failed to delete user.", type: "error" });
     }
   };
 
   const handleViewUserOrders = async (userId) => {
     try {
+      const token = localStorage.getItem("adminToken");
+      const config = { headers: { Authorization: `Bearer ${token}` } };
       const res = await axios.get(
-        `http://localhost:5500/api/admin/users/${userId}/orders`
+        `http://localhost:5500/api/admin/users/${userId}/orders`,
+        config
       );
       setOrders(res.data);
       setSelectedUser(userId);
       setActiveTab("orders");
     } catch (err) {
       console.error(err);
+      setNotification({
+        message: "Failed to fetch user orders.",
+        type: "error",
+      });
     }
   };
 
-  // Product Actions
+  // ---------- Product Actions ----------
   const handleDeleteProduct = async (id) => {
     if (!window.confirm("Delete this product?")) return;
     try {
-      await axios.delete(`http://localhost:5500/api/admin/products/${id}`);
+      const token = localStorage.getItem("adminToken");
+      const config = { headers: { Authorization: `Bearer ${token}` } };
+      await axios.delete(
+        `http://localhost:5500/api/admin/products/${id}`,
+        config
+      );
       setProducts(products.filter((p) => p._id !== id));
+      setNotification({
+        message: "Product deleted successfully.",
+        type: "success",
+      });
     } catch (err) {
       console.error(err);
+      setNotification({ message: "Failed to delete product.", type: "error" });
     }
   };
 
@@ -109,21 +146,33 @@ const Dashboard = () => {
   const handleSaveEdit = async () => {
     if (!editingProduct) return;
     try {
+      const token = localStorage.getItem("adminToken");
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
       const res = await axios.put(
         `http://localhost:5500/api/admin/products/${editingProduct._id}`,
         editData,
-        { headers: { "Content-Type": "application/json" } }
+        config
       );
       setProducts(
         products.map((p) => (p._id === editingProduct._id ? res.data : p))
       );
       setEditingProduct(null);
+      setNotification({
+        message: "Product updated successfully.",
+        type: "success",
+      });
     } catch (err) {
-      console.error("Error updating product:", err);
+      console.error(err);
+      setNotification({ message: "Failed to update product.", type: "error" });
     }
   };
 
-  // Render Analytics
+  // ---------- Render Functions ----------
   const renderAnalytics = () => (
     <div className="mb-8">
       <h2 className="text-3xl font-bold text-gray-800 mb-6">Analytics</h2>
@@ -148,7 +197,6 @@ const Dashboard = () => {
     </div>
   );
 
-  // Render Users
   const renderUsers = () => (
     <div>
       <h2 className="text-3xl font-bold mb-6 text-gray-800">Users</h2>
@@ -187,7 +235,6 @@ const Dashboard = () => {
     </div>
   );
 
-  // Render Orders
   const renderOrders = () => (
     <div>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-3">
@@ -251,7 +298,6 @@ const Dashboard = () => {
     </div>
   );
 
-  // Render Products
   const renderProducts = () => (
     <div>
       <h2 className="text-3xl font-bold mb-6 text-gray-800">Products</h2>
@@ -344,7 +390,6 @@ const Dashboard = () => {
     </div>
   );
 
-  // Render Carts
   const renderCarts = () => (
     <div>
       <h2 className="text-3xl font-bold mb-6 text-gray-800">Carts</h2>
@@ -379,12 +424,10 @@ const Dashboard = () => {
     </div>
   );
 
-  // Main Content Renderer
   const renderContent = () => {
     if (activeTab === "dashboard" || activeTab === "analytics") {
       return (
         <div className="space-y-12">
-          {/* Welcome */}
           <div className="text-center mt-4 md:mt-12">
             <h2 className="text-4xl font-bold text-gray-800">
               Welcome, Admin!
@@ -393,8 +436,6 @@ const Dashboard = () => {
               Access and manage your site’s features seamlessly.
             </p>
           </div>
-
-          {/* Analytics */}
           {renderAnalytics()}
         </div>
       );
@@ -415,11 +456,28 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row h-screen bg-gray-50">
-      <Sidebar setActiveTab={setActiveTab} />
-      <main className="flex-1 p-4 md:p-8 overflow-y-auto">
-        {renderContent()}
-      </main>
+    <div className="flex flex-col h-screen bg-gray-50">
+      {/* ✅ Single Navbar */}
+      <AdminNavbar toggleSidebar={toggleSidebar} />
+
+      <div className="flex flex-1 overflow-hidden">
+        <Sidebar
+          setActiveTab={setActiveTab}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+        />
+        <main className="flex-1 p-4 md:p-8 overflow-y-auto">
+          {renderContent()}
+        </main>
+      </div>
+
+      {notification.message && (
+        <Notification
+          message={notification.message}
+          type={notification.type}
+          onClose={() => setNotification({ message: "", type: "success" })}
+        />
+      )}
     </div>
   );
 };

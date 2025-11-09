@@ -11,6 +11,10 @@
   scroll-behavior: smooth;
 }
 
+body {
+  overflow-x: hidden;
+}
+
 .swiper-pagination {
   position: relative !important;
   margin-top: 8px !important; /* pushes dots below the box */

@@ -1,19 +1,22 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import FilterBar from "./FilterBar";
+import Notification from "../../../shared/components/common/Notification";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [message, setMessage] = useState("");
+  const [notification, setNotification] = useState({
+    message: "",
+    type: "success",
+  });
 
-  // ✅ Get userId + token safely
+  // Get userId + token safely
   const storedUser = localStorage.getItem("user");
   const user = storedUser ? JSON.parse(storedUser) : null;
   const token = localStorage.getItem("token");
   const userId = user?._id;
 
-  // ✅ Check if logged in before trying anything
   const isLoggedIn = Boolean(userId && token);
 
   // Fetch products
@@ -25,15 +28,19 @@ const Products = () => {
         setProducts(data);
       } catch (err) {
         console.error("Error fetching products:", err);
+        setNotification({
+          message: "Failed to fetch products!",
+          type: "error",
+        });
       }
     };
     fetchProducts();
   }, []);
 
-  // ✅ Add to Cart
+  // Add to Cart
   const handleAddToCart = async (productId) => {
     if (!isLoggedIn) {
-      alert("Please login first!");
+      setNotification({ message: "Please login first!", type: "error" });
       return;
     }
 
@@ -51,20 +58,18 @@ const Products = () => {
 
       if (!res.ok) throw new Error(data.message || "Failed to add to cart");
 
-      setMessage("Product added to cart!");
+      setNotification({ message: "Product added to cart!", type: "success" });
       console.log("Cart Updated:", data);
-
-      setTimeout(() => setMessage(""), 2000);
     } catch (err) {
       console.error("Error adding to cart:", err);
-      setMessage("Error adding to cart!");
+      setNotification({ message: "Error adding to cart!", type: "error" });
     }
   };
 
-  // ✅ Add to Wishlist
+  // Add to Wishlist
   const handleAddToWishlist = async (productId) => {
     if (!isLoggedIn) {
-      alert("Please login first!");
+      setNotification({ message: "Please login first!", type: "error" });
       return;
     }
 
@@ -82,13 +87,11 @@ const Products = () => {
 
       if (!res.ok) throw new Error(data.message || "Failed to add to wishlist");
 
-      setMessage("Added to wishlist!");
+      setNotification({ message: "Added to wishlist!", type: "success" });
       console.log("Wishlist Updated:", data);
-
-      setTimeout(() => setMessage(""), 2000);
     } catch (err) {
       console.error("Error adding to wishlist:", err);
-      setMessage("Error adding to wishlist!");
+      setNotification({ message: "Error adding to wishlist!", type: "error" });
     }
   };
 
@@ -105,13 +108,17 @@ const Products = () => {
           onCategoryChange={setSelectedCategory}
         />
 
-        {message && (
-          <div className="bg-green-100 text-green-800 p-2 rounded-md mb-4 text-sm">
-            {message}
-          </div>
+        {/* Notification */}
+        {notification.message && (
+          <Notification
+            message={notification.message}
+            type={notification.type}
+            onClose={() => setNotification({ message: "", type: "success" })}
+          />
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {/* Products Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-4">
           {filteredProducts.map((product) => (
             <div
               key={product._id}
@@ -133,13 +140,13 @@ const Products = () => {
               <div className="flex flex-col gap-2 mt-3">
                 <button
                   onClick={() => handleAddToCart(product._id)}
-                  className="border rounded-md px-4 py-2 text-[14px] text-white bg-yellow-900"
+                  className="border rounded-md px-4 py-2 text-[14px] text-white bg-yellow-900 hover:bg-yellow-800 transition"
                 >
                   Add to Cart
                 </button>
                 <button
                   onClick={() => handleAddToWishlist(product._id)}
-                  className="border rounded-md px-4 py-2 text-[14px] text-yellow-900 border-yellow-800"
+                  className="border rounded-md px-4 py-2 text-[14px] text-yellow-900 border-yellow-800 hover:bg-yellow-50 transition"
                 >
                   Wishlist
                 </button>

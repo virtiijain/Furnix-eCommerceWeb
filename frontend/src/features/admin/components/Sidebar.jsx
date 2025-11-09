@@ -1,38 +1,17 @@
 import PropTypes from "prop-types";
-import { useState } from "react";
-import {
-  FaUsers,
-  FaBox,
-  FaShoppingCart,
-  FaChartBar,
-  FaClipboardList,
-  FaBars,
-  FaSignOutAlt,
-} from "react-icons/fa";
+import { FaUsers, FaBox, FaShoppingCart, FaChartBar, FaClipboardList } from "react-icons/fa";
 
-const Sidebar = ({ setActiveTab }) => {
+const Sidebar = ({ setActiveTab, isOpen, setIsOpen }) => {
   const menuItems = [
     { name: "analytics", icon: <FaChartBar /> },
     { name: "users", icon: <FaUsers /> },
     { name: "orders", icon: <FaClipboardList /> },
     { name: "products", icon: <FaBox /> },
     { name: "carts", icon: <FaShoppingCart /> },
-    { name: "logout", icon: <FaSignOutAlt /> },
   ];
-
-  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
-      {/* Mobile top bar */}
-      <div className="md:hidden flex justify-between items-center p-4 bg-gray-900 text-white">
-        <h1 className="font-bold text-xl">Admin Panel</h1>
-        <button onClick={() => setIsOpen(true)}>
-          <FaBars />
-        </button>
-      </div>
-
-      {/* Overlay when sidebar open */}
       {isOpen && (
         <div
           className="fixed inset-0 bg-black opacity-50 z-40 md:hidden"
@@ -40,19 +19,18 @@ const Sidebar = ({ setActiveTab }) => {
         />
       )}
 
-      {/* Sidebar */}
       <div
         className={`
           fixed top-0 left-0 h-full bg-gray-900 text-white z-50
-          w-64 transform transition-transform duration-300
+          w-64 transform transition-transform duration-300 ease-in-out
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
-          md:translate-x-0 md:relative md:w-64 md:h-auto flex flex-col justify-between
+          md:translate-x-0 md:relative md:w-64 md:h-auto flex flex-col
         `}
       >
         <div className="p-6">
-          <h1 className="text-2xl font-bold mb-6 hidden md:block">
+          <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-3">
             Admin Panel
-          </h1>
+          </h2>
           {menuItems.map((item) => (
             <div
               key={item.name}
@@ -74,6 +52,8 @@ const Sidebar = ({ setActiveTab }) => {
 
 Sidebar.propTypes = {
   setActiveTab: PropTypes.func.isRequired,
+  isOpen: PropTypes.bool.isRequired,
+  setIsOpen: PropTypes.func.isRequired,
 };
 
 export default Sidebar;

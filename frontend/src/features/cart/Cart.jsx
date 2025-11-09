@@ -20,9 +20,9 @@ const Cart = () => {
   };
 
   return (
-    <section className="min-h-screen p-4 sm:p-6 bg-gray-50">
+    <section className="min-h-screen p-4 sm:p-6">
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-2xl sm:text-3xl font-semibold mb-6 sm:mb-8 text-gray-800 text-center sm:text-left">
+        <h2 className="text-xl md:text-2xl font-medium mb-6 text-gray-800 text-center sm:text-left">
           My Cart
         </h2>
 
@@ -32,19 +32,21 @@ const Cart = () => {
             <p className="text-gray-500 text-lg">Your cart is empty.</p>
           </div>
         ) : (
-          <div className="grid md:grid-cols-[2fr,1fr] gap-6 sm:gap-8">
-            <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6 border overflow-x-auto">
-              <div className="space-y-4 md:hidden">
-                {cartItems.map((item) => (
-                  <CartItem
-                    key={item._id}
-                    item={item}
-                    handleQuantityChange={handleQuantityChange}
-                    handleRemove={handleRemove}
-                  />
-                ))}
-              </div>
+          <div className="flex flex-col md:grid md:grid-cols-[2fr,1fr] gap-4 md:gap-6">
+            {/* Mobile Cart Items */}
+            <div className="flex flex-col space-y-4 md:hidden">
+              {cartItems.map((item) => (
+                <CartItem
+                  key={item._id}
+                  item={item}
+                  handleQuantityChange={handleQuantityChange}
+                  handleRemove={handleRemove}
+                />
+              ))}
+            </div>
 
+            {/* Table for Desktop */}
+            <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6 border overflow-x-auto md:overflow-visible">
               <CartTable
                 cartItems={cartItems}
                 handleQuantityChange={handleQuantityChange}
@@ -52,10 +54,13 @@ const Cart = () => {
               />
             </div>
 
-            <SummaryCard
-              totalPrice={totalPrice}
-              handleProceedToBuy={handleProceedToBuy}
-            />
+            {/* Summary */}
+            <div className="mt-6 md:mt-0 md:self-start">
+              <SummaryCard
+                totalPrice={totalPrice}
+                handleProceedToBuy={handleProceedToBuy}
+              />
+            </div>
           </div>
         )}
       </div>

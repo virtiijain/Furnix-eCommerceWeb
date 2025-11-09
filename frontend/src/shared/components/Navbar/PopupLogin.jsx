@@ -1,53 +1,70 @@
 import { useState } from "react";
 import { IoClose } from "react-icons/io5";
+import PropTypes from "prop-types";
 
 const PopupLogin = ({ onClose }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [notification, setNotification] = useState({ message: "", type: "success" });
 
   const handleLogin = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+  e.preventDefault();
+  setLoading(true);
 
-    try {
-      const res = await fetch("http://localhost:5500/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+  try {
+    const res = await fetch("http://localhost:5500/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
 
-      const data = await res.json();
+    const data = await res.json();
+    console.log(data.user);
 
-      if (res.ok) {
-        // ✅ Save user and token properly
-        localStorage.setItem("user", JSON.stringify(data.user));
-        localStorage.setItem("token", data.token);
+    if (res.ok) {
+      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("token", data.token);
 
-        alert(`Welcome back, ${data.user.name || "User"}!`);
+      const userName = data.user?.name || data.user?.email || "User";
+
+      setNotification({ message: `Welcome back, ${userName}!`, type: "success" });
+
+      setTimeout(() => {
+        setNotification({ message: "", type: "success" });
         onClose();
-
-        // ✅ Refresh to update UI
-        setTimeout(() => {
-          window.location.reload();
-        }, 500);
-      } else {
-        alert(data.message || "Invalid credentials");
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Something went wrong. Try again later.");
-    } finally {
-      setLoading(false);
+        window.location.reload();
+      }, 1500);
+    } else {
+      setNotification({ message: data.message || "Invalid credentials", type: "error" });
+      setTimeout(() => setNotification({ message: "", type: "success" }), 3000);
     }
-  };
+  } catch (err) {
+    console.error(err);
+    setNotification({ message: "Something went wrong. Try again later.", type: "error" });
+    setTimeout(() => setNotification({ message: "", type: "success" }), 3000);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="bg-white p-6 rounded-md shadow-lg w-80 relative">
         <h2 className="text-xl font-semibold mb-4 text-center">Sign In</h2>
+
+        {notification.message && (
+          <div
+            className={`p-2 rounded-md mb-3 text-sm text-center font-medium ${
+              notification.type === "success"
+                ? "bg-green-100 text-green-800"
+                : "bg-red-100 text-red-800"
+            }`}
+          >
+            {notification.message}
+          </div>
+        )}
 
         <form onSubmit={handleLogin} className="flex flex-col gap-3">
           <input
@@ -86,6 +103,10 @@ const PopupLogin = ({ onClose }) => {
       </div>
     </div>
   );
+};
+
+PopupLogin.propTypes = {
+  onClose: PropTypes.func.isRequired,
 };
 
 export default PopupLogin;
