@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 const Notification = ({ message, type = "success", onClose }) => {
   useEffect(() => {
     if (message) {
-      const timer = setTimeout(onClose, 2000); // auto-dismiss
+      const timer = setTimeout(onClose, 2000); 
       return () => clearTimeout(timer);
     }
   }, [message, onClose]);
@@ -26,7 +26,6 @@ const Notification = ({ message, type = "success", onClose }) => {
   );
 };
 
-// Prop types
 Notification.propTypes = {
   message: PropTypes.string.isRequired,
   type: PropTypes.oneOf(["success", "error"]),

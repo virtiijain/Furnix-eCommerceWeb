@@ -6,24 +6,22 @@ const UserMenu = ({ user, handleLogout, showNotification }) => {
   const navigate = useNavigate();
 
   const handleSignOut = () => {
-    handleLogout(); // clear user/token
+    handleLogout();
     if (showNotification) {
       showNotification("You have successfully logged out!", "success");
     }
-    navigate("/"); // redirect to home after logout
+    navigate("/"); 
   };
 
   return (
     <div className="absolute right-0 mt-3 w-64 bg-white border border-gray-200 rounded-xl shadow-xl overflow-hidden z-50 animate-fadeIn">
-
-      {/* User Header */}
       <div className="px-4 py-3 border-b flex items-center gap-3">
         <div className="w-10 h-10 bg-yellow-900 text-white flex items-center justify-center rounded-full font-semibold">
           {user?.name?.[0]?.toUpperCase() || "U"}
         </div>
         <div>
           <p className="font-medium text-gray-800">
-            Hello, {user?.name ? user.name.split(" ")[0] : "User"} 👋
+            Hello, {user?.name ? user.name.split(" ")[0] : "User"} 
           </p>
           <p
             onClick={() => navigate("/account")}
@@ -34,7 +32,6 @@ const UserMenu = ({ user, handleLogout, showNotification }) => {
         </div>
       </div>
 
-      {/* Menu Options */}
       <div className="flex flex-col text-gray-700 text-sm">
         <MenuButton icon={<FiShoppingBag />} label="My Orders" onClick={() => navigate("/orders")} />
         <MenuButton icon={<FiHeart />} label="Wishlist" onClick={() => navigate("/wishlist")} />
@@ -43,7 +40,6 @@ const UserMenu = ({ user, handleLogout, showNotification }) => {
         <MenuButton icon={<FiHelpCircle />} label="Help / Support" onClick={() => navigate("/help")} />
       </div>
 
-      {/* Logout */}
       <div className="border-t">
         <button
           onClick={handleSignOut}

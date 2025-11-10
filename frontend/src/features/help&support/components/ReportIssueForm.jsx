@@ -10,7 +10,7 @@ const ReportIssueForm = () => {
       alert("Please fill all fields");
       return;
     }
-    alert("Your issue has been submitted ✅");
+    alert("Your issue has been submitted");
     setIssue("");
     setMessage("");
   };

@@ -1,18 +1,16 @@
 import express from "express";
 import mongoose from "mongoose";
-import User from "../models/User.js";
-import Product from "../models/Product.js";
-import Cart from "../models/Cart.js";
-import Order from "../models/Orders.js";
-import Wishlist from "../models/Wishlist.js";
-import { verifyToken, verifyAdmin } from "../middleware/authMiddleware.js";
+import User from "../../models/User.js";
+import Product from "../../models/Product.js";
+import Cart from "../../models/Cart.js";
+import Order from "../../models/Orders.js";
+import Wishlist from "../../models/Wishlist.js";
+import { verifyToken, verifyAdmin } from "../../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// ✅ Apply admin protection globally for all routes below
 router.use(verifyToken, verifyAdmin);
 
-// 🧍 Get All Users
 router.get("/users", async (req, res) => {
   try {
     const users = await User.find();
@@ -22,7 +20,6 @@ router.get("/users", async (req, res) => {
   }
 });
 
-// ❌ Delete User + All Related Data
 router.delete("/users/:id", async (req, res) => {
   try {
     const userId = req.params.id;
@@ -33,7 +30,8 @@ router.delete("/users/:id", async (req, res) => {
     await Wishlist.deleteMany({ userId: userObjectId });
 
     const deletedUser = await User.findByIdAndDelete(userObjectId);
-    if (!deletedUser) return res.status(404).json({ message: "User not found" });
+    if (!deletedUser)
+      return res.status(404).json({ message: "User not found" });
 
     res.json({ message: "User and all related data deleted successfully" });
   } catch (error) {
@@ -41,7 +39,6 @@ router.delete("/users/:id", async (req, res) => {
   }
 });
 
-// 👀 View Specific User Orders
 router.get("/users/:id/orders", async (req, res) => {
   try {
     const orders = await Order.find({ userId: req.params.id })
@@ -53,12 +50,13 @@ router.get("/users/:id/orders", async (req, res) => {
   }
 });
 
-// 🧹 Cleanup endpoints
 router.delete("/cleanup/unknown-orders", async (req, res) => {
   try {
     const validUserIds = await User.distinct("_id");
     const result = await Order.deleteMany({ userId: { $nin: validUserIds } });
-    res.json({ message: `Deleted ${result.deletedCount} orders with unknown users` });
+    res.json({
+      message: `Deleted ${result.deletedCount} orders with unknown users`,
+    });
   } catch (error) {
     res.status(500).json({ message: "Error cleaning unknown orders", error });
   }
@@ -68,13 +66,14 @@ router.delete("/cleanup/unknown-carts", async (req, res) => {
   try {
     const validUserIds = await User.distinct("_id");
     const result = await Cart.deleteMany({ userId: { $nin: validUserIds } });
-    res.json({ message: `Deleted ${result.deletedCount} carts with unknown users` });
+    res.json({
+      message: `Deleted ${result.deletedCount} carts with unknown users`,
+    });
   } catch (error) {
     res.status(500).json({ message: "Error cleaning unknown carts", error });
   }
 });
 
-// 📦 Get All Products
 router.get("/products", async (req, res) => {
   try {
     const products = await Product.find();
@@ -84,18 +83,17 @@ router.get("/products", async (req, res) => {
   }
 });
 
-// 🗑️ Delete Product
 router.delete("/products/:id", async (req, res) => {
   try {
     const deletedProduct = await Product.findByIdAndDelete(req.params.id);
-    if (!deletedProduct) return res.status(404).json({ message: "Product not found" });
+    if (!deletedProduct)
+      return res.status(404).json({ message: "Product not found" });
     res.json({ message: "Product deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: "Error deleting product", error });
   }
 });
 
-// 📝 Update Product
 router.put("/products/:id", async (req, res) => {
   try {
     const { name, price, image } = req.body;
@@ -104,14 +102,14 @@ router.put("/products/:id", async (req, res) => {
       { name, price, image },
       { new: true }
     );
-    if (!updatedProduct) return res.status(404).json({ message: "Product not found" });
+    if (!updatedProduct)
+      return res.status(404).json({ message: "Product not found" });
     res.status(200).json(updatedProduct);
   } catch (error) {
     res.status(500).json({ message: "Error updating product", error });
   }
 });
 
-// 🛒 Get All Carts
 router.get("/carts", async (req, res) => {
   try {
     const carts = await Cart.find()
@@ -123,14 +121,13 @@ router.get("/carts", async (req, res) => {
   }
 });
 
-// 🧾 Get All Orders
 router.get("/orders", async (req, res) => {
   try {
     const orders = await Order.find()
       .populate("userId", "name email")
       .populate("items.productId", "name price image");
 
-    const validOrders = orders.filter(order => order.userId !== null);
+    const validOrders = orders.filter((order) => order.userId !== null);
     res.status(200).json(validOrders);
   } catch (error) {
     res.status(500).json({ message: "Error fetching orders", error });

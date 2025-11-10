@@ -1,4 +1,4 @@
-import Admin from "../models/adminModel.js";
+import Admin from "../models/admin.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
@@ -13,8 +13,7 @@ export const adminLogin = async (req, res) => {
     const isMatch = await bcrypt.compare(password, admin.password);
     if (!isMatch)
       return res.status(400).json({ message: "Invalid credentials" });
-
-    // Generate JWT
+    
     const token = jwt.sign(
       { id: admin._id, role: admin.role },
       process.env.JWT_SECRET,

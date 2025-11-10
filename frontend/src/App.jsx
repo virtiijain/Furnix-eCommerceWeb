@@ -28,7 +28,6 @@ const Layout = ({ children }) => {
 
   return (
     <>
-      {/* 👇 Regular navbar + footer only for user-side pages */}
       {!isAdminRoute && <Navbar />}
       {children}
       {!isAdminRoute && <Footer />}
@@ -42,7 +41,6 @@ const AppContent = () => {
       <WishlistProvider>
         <Layout>
           <Routes>
-            {/* User routes */}
             <Route path="/" element={<Home />} />
             <Route path="/shop" element={<Shop />} />
             <Route path="/shop/:category" element={<Shop />} />
@@ -54,8 +52,6 @@ const AppContent = () => {
             <Route path="/orders" element={<MyOrders />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/help" element={<HelpSupport />} />
-
-            {/* Admin routes */}
             <Route path="/admin/dashboard" element={<Dashboard />} />
             <Route path="/admin/login" element={<AdminLogin />} />
           </Routes>

@@ -66,7 +66,6 @@ const Wishlist = () => {
           </div>
         ) : (
           <>
-            {/* Desktop Table */}
             <div className="hidden md:block bg-white rounded-2xl shadow p-6 border overflow-x-auto">
               <table className="w-full text-left">
                 <thead>
@@ -130,7 +129,6 @@ const Wishlist = () => {
               </table>
             </div>
 
-            {/* Mobile Cards */}
             <div className="flex flex-col gap-4 md:hidden">
               {wishlistItems.map((item) => (
                 <div

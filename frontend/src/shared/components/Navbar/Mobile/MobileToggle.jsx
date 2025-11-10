@@ -2,8 +2,8 @@ import { CiMenuFries } from "react-icons/ci";
 import { FaUserCircle } from "react-icons/fa";
 import PropTypes from "prop-types";
 import { useState, useRef, useEffect } from "react";
-import useOutsideClick from "../../hooks/useOutsideClick";
-import UserMenu from "./UserMenu";
+import useOutsideClick from "../../../hooks/useOutsideClick";
+import UserMenu from "../User/UserMenu";
 
 const MobileToggle = ({ onToggle, user, token, handleLogout, showNotification }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -11,7 +11,6 @@ const MobileToggle = ({ onToggle, user, token, handleLogout, showNotification })
 
   useOutsideClick(dropdownRef, () => setDropdownOpen(false), dropdownOpen);
 
-  // Close dropdown automatically if user logs out
   useEffect(() => {
     if (!token || !user) {
       setDropdownOpen(false);

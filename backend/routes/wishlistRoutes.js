@@ -3,7 +3,6 @@ import Wishlist from "../models/Wishlist.js";
 
 const router = express.Router();
 
-// ✅ POST: Add item to wishlist
 router.post("/", async (req, res) => {
   try {
     const { userId, productId } = req.body;
@@ -25,7 +24,6 @@ router.post("/", async (req, res) => {
   }
 });
 
-// ✅ GET: Fetch user wishlist
 router.get("/:userId", async (req, res) => {
   try {
     const wishlist = await Wishlist.findOne({ userId: req.params.userId }).populate("items.productId");
@@ -35,7 +33,6 @@ router.get("/:userId", async (req, res) => {
   }
 });
 
-// ✅ DELETE: Remove item from wishlist
 router.delete("/:userId/:productId", async (req, res) => {
   const { userId, productId } = req.params;
 
@@ -43,7 +40,6 @@ router.delete("/:userId/:productId", async (req, res) => {
     const wishlist = await Wishlist.findOne({ userId });
     if (!wishlist) return res.status(404).json({ message: "Wishlist not found" });
 
-    // 🧠 Fix: handle both populated + non-populated productIds
     wishlist.items = wishlist.items.filter((item) => {
       const id =
         typeof item.productId === "object"
@@ -53,7 +49,7 @@ router.delete("/:userId/:productId", async (req, res) => {
     });
 
     await wishlist.save();
-    res.json({ message: "Item removed from wishlist ✅" });
+    res.json({ message: "Item removed from wishlist" });
   } catch (err) {
     console.error("Error removing wishlist item:", err);
     res.status(500).json({ message: "Server error", error: err.message });

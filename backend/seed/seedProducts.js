@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import Product from "./models/Product.js";
+import Product from "../models/Product.js";
 
 dotenv.config();
 
@@ -67,9 +67,9 @@ mongoose
   .connect(process.env.MONGO_URI)
   .then(async () => {
     console.log("Connected to MongoDB");
-    await Product.deleteMany(); // clear old data
+    await Product.deleteMany(); 
     await Product.insertMany(products);
     console.log("products added successfully!");
     mongoose.connection.close();
   })
-  .catch((err) => console.error("❌DB connection error:", err));
+  .catch((err) => console.error("DB connection error:", err));

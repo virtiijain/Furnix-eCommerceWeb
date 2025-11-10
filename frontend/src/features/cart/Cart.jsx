@@ -33,7 +33,6 @@ const Cart = () => {
           </div>
         ) : (
           <div className="flex flex-col md:grid md:grid-cols-[2fr,1fr] gap-4 md:gap-6">
-            {/* Mobile Cart Items */}
             <div className="flex flex-col space-y-4 md:hidden">
               {cartItems.map((item) => (
                 <CartItem
@@ -45,7 +44,6 @@ const Cart = () => {
               ))}
             </div>
 
-            {/* Table for Desktop */}
             <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6 border overflow-x-auto md:overflow-visible">
               <CartTable
                 cartItems={cartItems}
@@ -54,7 +52,6 @@ const Cart = () => {
               />
             </div>
 
-            {/* Summary */}
             <div className="mt-6 md:mt-0 md:self-start">
               <SummaryCard
                 totalPrice={totalPrice}

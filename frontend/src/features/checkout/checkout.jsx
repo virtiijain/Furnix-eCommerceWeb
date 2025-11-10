@@ -98,7 +98,6 @@ const Checkout = () => {
             Checkout
           </h2>
 
-          {/* Order Summary */}
           <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6 border">
             <h3 className="text-xl font-semibold mb-4 text-gray-700">
               Your Order
@@ -110,7 +109,6 @@ const Checkout = () => {
             />
           </div>
 
-          {/* Delivery & Payment */}
           <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6 border">
             <h3 className="text-xl font-semibold mb-4 text-gray-700">
               Delivery & Payment
@@ -125,7 +123,6 @@ const Checkout = () => {
         </div>
       </section>
 
-      {/* Payment Modal */}
       {showModal && (
         <PaymentModal
           totalPrice={checkoutData.totalPrice}
@@ -134,14 +131,12 @@ const Checkout = () => {
         />
       )}
 
-      {/* Success Message */}
       {successMsg && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-yellow-900 text-white px-6 py-3 rounded-lg shadow-lg text-sm sm:text-base">
           {successMsg}
         </div>
       )}
 
-      {/* Mobile Sticky Button */}
       <div className="sticky bottom-0 bg-white border-t p-4 sm:hidden">
         <button
           onClick={() => setShowModal(true)}

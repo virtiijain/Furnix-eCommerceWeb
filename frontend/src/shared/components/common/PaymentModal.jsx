@@ -1,16 +1,15 @@
 import { useState } from "react";
+import PropTypes from "prop-types";
 
 const PaymentModal = ({ onClose, onConfirm, totalPrice }) => {
   const [loading, setLoading] = useState(false);
 
   const handlePayment = () => {
     setLoading(true);
-
-    // ⏳ fake payment delay
     setTimeout(() => {
       setLoading(false);
       onClose();
-      onConfirm(); // this will call your handleConfirmOrder()
+      onConfirm(); 
     }, 2000);
   };
 
@@ -53,3 +52,9 @@ const PaymentModal = ({ onClose, onConfirm, totalPrice }) => {
 };
 
 export default PaymentModal;
+
+PaymentModal.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  onConfirm: PropTypes.func.isRequired,
+  totalPrice: PropTypes.number.isRequired,
+};

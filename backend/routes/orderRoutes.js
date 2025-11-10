@@ -4,7 +4,6 @@ import Cart from "../models/Cart.js";
 
 const router = express.Router();
 
-// 🧾 Create new order
 router.post("/", async (req, res) => {
   try {
     const { userId, items, totalPrice, address, paymentMethod } = req.body;
@@ -19,10 +18,9 @@ router.post("/", async (req, res) => {
 
     await newOrder.save();
 
-    // 🧹 After order is successfully saved, clear user's cart
     await Cart.findOneAndUpdate(
       { userId },
-      { $set: { items: [] } }, // empty the cart
+      { $set: { items: [] } },
       { new: true }
     );
 
@@ -37,7 +35,6 @@ router.post("/", async (req, res) => {
   }
 });
 
-// 📦 Get all orders for a user
 router.get("/:userId", async (req, res) => {
   try {
     const orders = await Order.find({ userId: req.params.userId })

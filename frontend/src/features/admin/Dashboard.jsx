@@ -3,6 +3,14 @@ import axios from "axios";
 import Sidebar from "./components/Sidebar";
 import AdminNavbar from "../admin/components/AdminNavbar";
 import Notification from "../../shared/components/common/Notification";
+import {
+  Users,
+  Package,
+  ShoppingBag,
+  IndianRupee,
+  Mail,
+  Shield,
+} from "lucide-react";
 
 const Dashboard = () => {
   const [users, setUsers] = useState([]);
@@ -21,7 +29,6 @@ const Dashboard = () => {
 
   const toggleSidebar = () => setIsOpen((prev) => !prev);
 
-  // Fetch all data
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -73,7 +80,6 @@ const Dashboard = () => {
     0
   );
 
-  // ---------- User Actions ----------
   const handleDeleteUser = async (id) => {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
     try {
@@ -113,7 +119,6 @@ const Dashboard = () => {
     }
   };
 
-  // ---------- Product Actions ----------
   const handleDeleteProduct = async (id) => {
     if (!window.confirm("Delete this product?")) return;
     try {
@@ -172,73 +177,130 @@ const Dashboard = () => {
     }
   };
 
-  // ---------- Render Functions ----------
   const renderAnalytics = () => (
-    <div className="mb-8">
-      <h2 className="text-3xl font-bold text-gray-800 mb-6">Analytics</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-6 rounded-xl shadow hover:shadow-2xl transition">
-          <p className="text-gray-500 font-medium">Total Users</p>
-          <h3 className="text-2xl font-bold">{users.length}</h3>
+    <div className="mb-10">
+      <h2 className="text-xl lg:text-2xl font-medium text-gray-800 mb-8 text-center sm:text-left">
+        Analytics Overview
+      </h2>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="flex items-center gap-5 bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-2xl p-6 shadow hover:shadow-lg transition-transform duration-300 hover:-translate-y-1">
+          <div className="bg-blue-500 p-3 rounded-full text-white shadow-md">
+            <Users size={26} />
+          </div>
+          <div>
+            <p className="text-gray-600 text-sm font-medium">Total Users</p>
+            <h3 className="text-2xl font-bold text-gray-800">{users.length}</h3>
+          </div>
         </div>
-        <div className="bg-white p-6 rounded-xl shadow hover:shadow-2xl transition">
-          <p className="text-gray-500 font-medium">Total Orders</p>
-          <h3 className="text-2xl font-bold">{orders.length}</h3>
+
+        <div className="flex items-center gap-5 bg-gradient-to-br from-green-50 to-green-100 border border-green-200 rounded-2xl p-6 shadow hover:shadow-lg transition-transform duration-300 hover:-translate-y-1">
+          <div className="bg-green-500 p-3 rounded-full text-white shadow-md">
+            <ShoppingBag size={26} />
+          </div>
+          <div>
+            <p className="text-gray-600 text-sm font-medium">Total Orders</p>
+            <h3 className="text-2xl font-bold text-gray-800">
+              {orders.length}
+            </h3>
+          </div>
         </div>
-        <div className="bg-white p-6 rounded-xl shadow hover:shadow-2xl transition">
-          <p className="text-gray-500 font-medium">Products</p>
-          <h3 className="text-2xl font-bold">{products.length}</h3>
+
+        <div className="flex items-center gap-5 bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 rounded-2xl p-6 shadow hover:shadow-lg transition-transform duration-300 hover:-translate-y-1">
+          <div className="bg-purple-500 p-3 rounded-full text-white shadow-md">
+            <Package size={26} />
+          </div>
+          <div>
+            <p className="text-gray-600 text-sm font-medium">Products</p>
+            <h3 className="text-2xl font-bold text-gray-800">
+              {products.length}
+            </h3>
+          </div>
         </div>
-        <div className="bg-white p-6 rounded-xl shadow hover:shadow-2xl transition">
-          <p className="text-gray-500 font-medium">Revenue</p>
-          <h3 className="text-2xl font-bold">₹{totalRevenue}</h3>
+
+        <div className="flex items-center gap-5 bg-gradient-to-br from-yellow-50 to-yellow-100 border border-yellow-200 rounded-2xl p-6 shadow hover:shadow-lg transition-transform duration-300 hover:-translate-y-1">
+          <div className="bg-yellow-500 p-3 rounded-full text-white shadow-md">
+            <IndianRupee size={26} />
+          </div>
+          <div>
+            <p className="text-gray-600 text-sm font-medium">Revenue</p>
+            <h3 className="text-2xl font-bold text-gray-800">
+              ₹{totalRevenue}
+            </h3>
+          </div>
         </div>
       </div>
     </div>
   );
 
   const renderUsers = () => (
-    <div>
-      <h2 className="text-3xl font-bold mb-6 text-gray-800">Users</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {users.length === 0 ? (
-          <p className="text-gray-500">No users found</p>
-        ) : (
-          users.map((u) => (
+    <div className="mb-10">
+      <h2 className="text-xl lg:text-2xl font-medium mb-8 text-gray-800 text-center sm:text-left">
+        Users Management
+      </h2>
+
+      {users.length === 0 ? (
+        <p className="text-gray-500 text-center">No users found</p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {users.map((u) => (
             <div
               key={u._id}
-              className="bg-white p-5 rounded-xl shadow hover:shadow-2xl transition transform hover:-translate-y-1"
+              className="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-gray-100 flex flex-col justify-between"
             >
-              <h3 className="text-xl font-semibold text-gray-700">{u.name}</h3>
-              <p className="text-gray-500 text-sm">{u.email}</p>
-              <p className="text-gray-400 text-xs mt-1">
-                Role: <span className="capitalize">{u.role || "user"}</span>
-              </p>
-              <div className="mt-4 flex flex-wrap gap-3">
-                <button
-                  onClick={() => handleDeleteUser(u._id)}
-                  className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition"
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 text-white rounded-full flex items-center justify-center text-xl font-bold shadow">
+                  {u.name?.charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-800">
+                    {u.name}
+                  </h3>
+                  <p className="text-gray-500 text-sm flex items-center gap-1">
+                    <Mail size={14} /> {u.email}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 mt-4">
+                <Shield size={16} className="text-gray-400" />
+                <span
+                  className={`text-xs font-semibold px-2 py-1 rounded-full ${
+                    u.role === "admin"
+                      ? "bg-yellow-100 text-yellow-700"
+                      : "bg-green-100 text-green-700"
+                  }`}
                 >
-                  Delete
-                </button>
+                  {u.role || "User"}
+                </span>
+              </div>
+
+              <div className="mt-5 flex flex-wrap gap-3">
                 <button
                   onClick={() => handleViewUserOrders(u._id)}
-                  className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+                  className="flex-1 px-3 py-2 bg-yellow-900 text-white rounded-lg text-sm font-medium transition"
                 >
                   Orders
                 </button>
+                <button
+                  onClick={() => handleDeleteUser(u._id)}
+                  className="flex-1 px-3 py-2 border-2 border-red-700 text-black rounded-lg text-sm font-medium transition"
+                >
+                  Delete
+                </button>
               </div>
             </div>
-          ))
-        )}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 
   const renderOrders = () => (
     <div>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-3">
-        <h2 className="text-3xl font-bold text-gray-800">Orders</h2>
+        <h2 className="text-xl lg:text-2xl font-medium text-gray-800 text-center sm:text-left">
+          Orders Overview
+        </h2>
         {selectedUser && (
           <button
             onClick={() => {
@@ -300,7 +362,9 @@ const Dashboard = () => {
 
   const renderProducts = () => (
     <div>
-      <h2 className="text-3xl font-bold mb-6 text-gray-800">Products</h2>
+      <h2 className="text-xl lg:text-2xl font-medium text-gray-800 mb-6 text-center sm:text-left">
+        Manage Products
+      </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {products.length === 0 ? (
           <p className="text-gray-500">No products found</p>
@@ -369,13 +433,13 @@ const Dashboard = () => {
                     <div className="flex justify-between gap-2 flex-wrap">
                       <button
                         onClick={() => handleOpenEdit(p)}
-                        className="px-2 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition"
+                        className="px-5 py-1 bg-yellow-900 text-white rounded"
                       >
                         Edit
                       </button>
                       <button
                         onClick={() => handleDeleteProduct(p._id)}
-                        className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition"
+                        className="px-5 py-1 border-2 border-red-700 text-black rounded"
                       >
                         Delete
                       </button>
@@ -392,7 +456,9 @@ const Dashboard = () => {
 
   const renderCarts = () => (
     <div>
-      <h2 className="text-3xl font-bold mb-6 text-gray-800">Carts</h2>
+      <h2 className="text-xl lg:text-2xl font-medium mb-6 text-gray-800 text-center sm:text-left">
+        Customers Cart
+      </h2>
       <div className="bg-white shadow-lg rounded-xl p-6 overflow-x-auto">
         {carts.filter((c) => c.userId).length === 0 ? (
           <p className="text-gray-500">No carts found</p>
@@ -457,7 +523,6 @@ const Dashboard = () => {
 
   return (
     <div className="flex flex-col h-screen bg-gray-50">
-      {/* ✅ Single Navbar */}
       <AdminNavbar toggleSidebar={toggleSidebar} />
 
       <div className="flex flex-1 overflow-hidden">

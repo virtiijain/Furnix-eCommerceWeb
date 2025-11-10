@@ -3,7 +3,6 @@ import Cart from "../models/Cart.js";
 
 const router = express.Router();
 
-// POST: Add item to cart
 router.post("/", async (req, res) => {
   try {
     const { userId, productId, quantity } = req.body;
@@ -34,24 +33,23 @@ router.post("/", async (req, res) => {
   }
 });
 
-// GET: Fetch user cart
+
 router.get("/:userId", async (req, res) => {
   try {
     const cart = await Cart.findOne({ userId: req.params.userId })
-      .populate("items.productId") // shows product details
-      .populate("userId", "name email"); // shows user details (just name & email)
+      .populate("items.productId") 
+      .populate("userId", "name email"); 
 
     if (!cart) {
       return res.json({ items: [] });
     }
 
-    res.json(cart); // return full cart (now includes user info too)
+    res.json(cart); 
   } catch (err) {
     res.status(500).json({ message: "Error fetching cart", error: err.message });
   }
 });
 
-// DELETE /api/cart/:userId/:productId
 router.delete("/:userId/:productId", async (req, res) => {
   const { userId, productId } = req.params;
 

@@ -10,10 +10,8 @@ const ProductDetail = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log("🟡 Product ID from URL:", id);
 
     if (!id) {
-      console.log("⚠️ No ID found in URL.");
       setLoading(false);
       return;
     }
@@ -24,11 +22,10 @@ const ProductDetail = () => {
         if (!res.ok) throw new Error("Failed to fetch product");
 
         const data = await res.json();
-        console.log("✅ Product fetched:", data);
         setProduct(data);
         setLoading(false);
       } catch (error) {
-        console.log("❌ Error fetching product:", error);
+        console.log("Error fetching product:", error);
         setLoading(false);
       }
     };
@@ -47,7 +44,7 @@ const ProductDetail = () => {
   if (!product) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center">
-        <h2 className="text-2xl font-semibold">Product not found 😕</h2>
+        <h2 className="text-2xl font-semibold">Product not found</h2>
         <button
           onClick={() => navigate("/shop")}
           className="mt-4 px-4 py-2 bg-yellow-900 text-white rounded-md"

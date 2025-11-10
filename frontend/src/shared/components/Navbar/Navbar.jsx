@@ -1,14 +1,14 @@
 import { useRef, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import NavLinks from "./NavLinks";
-import PopupSignup from "./PopupSignup";
-import PopupLogin from "./PopupLogin";
-import MobileToggle from "./MobileToggle";
-import MobileNav from "./MobileNav";
+import PopupSignup from "./Popups/PopupSignup";
+import PopupLogin from "./Popups/PopupLogin";
+import MobileToggle from "./Mobile/MobileToggle";
+import MobileNav from "./Mobile/MobileNav";
 import { FaUserCircle } from "react-icons/fa";
 import { openPopup, closePopup } from "../../redux/popupSlice";
 import useOutsideClick from "../../hooks/useOutsideClick";
-import UserMenu from "./UserMenu";
+import UserMenu from "./User/UserMenu";
 import Notification from "../common/Notification";
 
 const Navbar = () => {
@@ -29,7 +29,6 @@ const Navbar = () => {
   useOutsideClick(menuRef, () => setIsMobileMenuOpen(false), isMobileMenuOpen);
   useOutsideClick(dropdownRef, () => setDropdownOpen(false), dropdownOpen);
 
-  // Get user profile if token exists
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     if (storedToken) {
@@ -75,7 +74,6 @@ const Navbar = () => {
         <NavLinks />
       </ul>
 
-      {/* Auth Section */}
       <div className="hidden md:flex items-center gap-4 relative ml-5">
         {token ? (
           <div className="relative" ref={dropdownRef}>
@@ -112,7 +110,6 @@ const Navbar = () => {
         )}
       </div>
 
-      {/* Mobile Menu */}
       <MobileToggle
         onToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         user={user}
@@ -129,7 +126,6 @@ const Navbar = () => {
         menuRef={menuRef}
       />
 
-      {/* Popups */}
       {isOpen && popupType === "signup" && (
         <PopupSignup onClose={() => dispatch(closePopup())} />
       )}
@@ -137,7 +133,6 @@ const Navbar = () => {
         <PopupLogin onClose={() => dispatch(closePopup())} />
       )}
 
-      {/* Notifications */}
       <Notification
         message={notification.message}
         type={notification.type}

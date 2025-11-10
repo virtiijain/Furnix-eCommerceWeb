@@ -4,12 +4,12 @@ const popupSlice = createSlice({
   name: "popup",
   initialState: {
     isOpen: false,
-    popupType: null, // can be "signup" or "login"
+    popupType: null,
   },
   reducers: {
     openPopup: (state, action) => {
       state.isOpen = true;
-      state.popupType = action.payload; // pass "signup" or "login"
+      state.popupType = action.payload; 
     },
     closePopup: (state) => {
       state.isOpen = false;

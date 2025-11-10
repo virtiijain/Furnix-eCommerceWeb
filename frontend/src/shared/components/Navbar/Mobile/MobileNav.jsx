@@ -1,7 +1,7 @@
-import NavLinks from "./NavLinks";
+import NavLinks from "../NavLinks";
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
-import { openPopup } from "../../redux/popupSlice";
+import { openPopup } from "../../../redux/popupSlice";
 
 const MobileNav = ({ isOpen, onClose, menuRef }) => {
   const dispatch = useDispatch();

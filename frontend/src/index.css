@@ -17,12 +17,12 @@ body {
 
 .swiper-pagination {
   position: relative !important;
-  margin-top: 8px !important; /* pushes dots below the box */
+  margin-top: 8px !important; 
 }
 
 .swiper-button-next,
 .swiper-button-prev {
-  color: #78350f !important; /* same brown tone */
+  color: #78350f !important;
   transition: transform 0.3s ease;
 }
 

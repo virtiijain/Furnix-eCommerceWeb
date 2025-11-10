@@ -11,23 +11,20 @@ const AdminNavbar = ({ toggleSidebar }) => {
   };
 
   return (
-    <nav className="flex items-center justify-between px-6 py-4 bg-gray-900 text-white shadow-md">
+    <nav className="flex items-center justify-between px-6 py-4 bg-yellow-900 text-white shadow-md">
       <div className="flex items-center gap-2">
-        <FaUserShield className="text-yellow-400" size={24} />
+        <FaUserShield className="text-white" size={24} />
         <h1 className="text-lg font-semibold tracking-wide">Furnix Admin</h1>
       </div>
 
       <div className="flex items-center gap-4">
         <button
           onClick={handleLogout}
-          className="bg-yellow-500 text-black px-3 py-1 rounded-md hover:bg-yellow-400 transition-all"
+          className="border-2 text-white px-4 py-1 rounded-md hover:bg-yellow-600 hover:text-black transition-all"
         >
           Logout
         </button>
-        <button
-          onClick={toggleSidebar}
-          className="md:hidden"
-        >
+        <button onClick={toggleSidebar} className="md:hidden">
           <FaBars size={18} />
         </button>
       </div>

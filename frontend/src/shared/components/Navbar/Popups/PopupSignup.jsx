@@ -2,7 +2,7 @@ import { IoClose } from "react-icons/io5";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import axios from "axios";
-import Notification from "../../../shared/components/common/Notification"; // adjust path
+import Notification from "../../common/Notification"; 
 
 const PopupSignup = ({ onClose }) => {
   const [name, setName] = useState("");
@@ -33,15 +33,11 @@ const PopupSignup = ({ onClose }) => {
         throw new Error("Signup response incomplete. Please login manually.");
       }
 
-      // Save token & user
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
 
-      // Show notification instead of alert
       const userName = user?.name || user?.email || "User";
       setNotification({ message: `Welcome, ${userName}`, type: "success" });
-
-      // auto-close popup & notification
       setTimeout(() => {
         setNotification({ message: "", type: "success" });
         onClose();
@@ -55,7 +51,6 @@ const PopupSignup = ({ onClose }) => {
         type: "error",
       });
 
-      // auto-hide error notification
       setTimeout(() => setNotification({ message: "", type: "success" }), 3000);
     } finally {
       setLoading(false);

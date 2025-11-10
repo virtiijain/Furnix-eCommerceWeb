@@ -1,13 +1,16 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { FaUserShield } from "react-icons/fa";
-import Notification from "../../../shared/components/common/Notification"; // adjust path if needed
+import Notification from "../../../shared/components/common/Notification";
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [notification, setNotification] = useState({ message: "", type: "success" });
+  const [notification, setNotification] = useState({
+    message: "",
+    type: "success",
+  });
 
   const handleAdminLogin = async (e) => {
     e.preventDefault();
@@ -23,21 +26,30 @@ const AdminLogin = () => {
       const data = await res.json();
 
       if (!res.ok) {
-        setNotification({ message: data.message || "Invalid credentials", type: "error" });
+        setNotification({
+          message: data.message || "Invalid credentials",
+          type: "error",
+        });
         return;
       }
 
       localStorage.setItem("adminToken", data.token);
       localStorage.setItem("admin", JSON.stringify(data.admin));
 
-      setNotification({ message: `Welcome Admin ${data.admin?.name || ""}!`, type: "success" });
+      setNotification({
+        message: `Welcome Admin ${data.admin?.name || ""}!`,
+        type: "success",
+      });
 
       setTimeout(() => {
         window.location.href = "/admin/dashboard";
-      }, 1200); // allow notification to show
+      }, 1200);
     } catch (err) {
       console.error(err);
-      setNotification({ message: "Something went wrong. Try again later.", type: "error" });
+      setNotification({
+        message: "Something went wrong. Try again later.",
+        type: "error",
+      });
     } finally {
       setLoading(false);
     }
@@ -45,7 +57,6 @@ const AdminLogin = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-      {/* Notification */}
       {notification.message && (
         <Notification
           message={notification.message}
