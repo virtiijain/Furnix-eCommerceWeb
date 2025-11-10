@@ -13,29 +13,31 @@ router.use(verifyToken, verifyAdmin);
 
 router.get("/users", async (req, res) => {
   try {
-    const users = await User.find();
+    const users = await User.find().select("-password");
     res.status(200).json(users);
   } catch (error) {
-    res.status(500).json({ message: "Error fetching users", error });
+    console.error("Error fetching users:", error);
+    res.status(500).json({ message: "Error fetching users", error: error.message });
   }
 });
 
 router.delete("/users/:id", async (req, res) => {
   try {
-    const userId = req.params.id;
-    const userObjectId = new mongoose.Types.ObjectId(userId);
+    const userId = new mongoose.Types.ObjectId(req.params.id);
 
-    await Order.deleteMany({ userId: userObjectId });
-    await Cart.deleteMany({ userId: userObjectId });
-    await Wishlist.deleteMany({ userId: userObjectId });
+    await Promise.all([
+      Order.deleteMany({ userId }),
+      Cart.deleteMany({ userId }),
+      Wishlist.deleteMany({ userId }),
+    ]);
 
-    const deletedUser = await User.findByIdAndDelete(userObjectId);
-    if (!deletedUser)
-      return res.status(404).json({ message: "User not found" });
+    const deletedUser = await User.findByIdAndDelete(userId);
+    if (!deletedUser) return res.status(404).json({ message: "User not found" });
 
-    res.json({ message: "User and all related data deleted successfully" });
+    res.json({ message: "User and related data deleted successfully" });
   } catch (error) {
-    res.status(500).json({ message: "Error deleting user", error });
+    console.error("Error deleting user:", error);
+    res.status(500).json({ message: "Error deleting user", error: error.message });
   }
 });
 
@@ -43,10 +45,12 @@ router.get("/users/:id/orders", async (req, res) => {
   try {
     const orders = await Order.find({ userId: req.params.id })
       .populate("userId", "name email")
-      .populate("items.productId", "name price image");
+      .populate("items.productId", "name price image category");
+
     res.status(200).json(orders);
   } catch (error) {
-    res.status(500).json({ message: "Error fetching user orders", error });
+    console.error("Error fetching user orders:", error);
+    res.status(500).json({ message: "Error fetching user orders", error: error.message });
   }
 });
 
@@ -54,11 +58,10 @@ router.delete("/cleanup/unknown-orders", async (req, res) => {
   try {
     const validUserIds = await User.distinct("_id");
     const result = await Order.deleteMany({ userId: { $nin: validUserIds } });
-    res.json({
-      message: `Deleted ${result.deletedCount} orders with unknown users`,
-    });
+
+    res.json({ message: `Deleted ${result.deletedCount} orders with unknown users` });
   } catch (error) {
-    res.status(500).json({ message: "Error cleaning unknown orders", error });
+    res.status(500).json({ message: "Error cleaning unknown orders", error: error.message });
   }
 });
 
@@ -66,11 +69,10 @@ router.delete("/cleanup/unknown-carts", async (req, res) => {
   try {
     const validUserIds = await User.distinct("_id");
     const result = await Cart.deleteMany({ userId: { $nin: validUserIds } });
-    res.json({
-      message: `Deleted ${result.deletedCount} carts with unknown users`,
-    });
+
+    res.json({ message: `Deleted ${result.deletedCount} carts with unknown users` });
   } catch (error) {
-    res.status(500).json({ message: "Error cleaning unknown carts", error });
+    res.status(500).json({ message: "Error cleaning unknown carts", error: error.message });
   }
 });
 
@@ -79,7 +81,51 @@ router.get("/products", async (req, res) => {
     const products = await Product.find();
     res.status(200).json(products);
   } catch (error) {
-    res.status(500).json({ message: "Error fetching products", error });
+    console.error("Error fetching products:", error);
+    res.status(500).json({ message: "Error fetching products", error: error.message });
+  }
+});
+
+router.post("/products", async (req, res) => {
+  try {
+    const { name, price, image, category } = req.body;
+
+    if (!name || !price || !category) {
+      return res.status(400).json({ message: "Name, price, and category are required" });
+    }
+
+    const newProduct = new Product({
+      name,
+      price,
+      image: image || "https://via.placeholder.com/150",
+      category,
+    });
+
+    await newProduct.save();
+    res.status(201).json({ message: "Product added successfully", newProduct });
+  } catch (error) {
+    console.error("Error adding product:", error);
+    res.status(500).json({ message: "Error adding product", error: error.message });
+  }
+});
+
+router.put("/products/:id", async (req, res) => {
+  try {
+    const { name, price, image, category } = req.body;
+
+    const updatedProduct = await Product.findByIdAndUpdate(
+      req.params.id,
+      { name, price, image, category },
+      { new: true }
+    );
+
+    if (!updatedProduct)
+      return res.status(404).json({ message: "Product not found" });
+
+    res.status(200).json({ message: "Product updated successfully", updatedProduct });
+  } catch (error) {
+    console.error("Error updating product:", error);
+    res.status(500).json({ message: "Error updating product", error: error.message });
   }
 });
 
@@ -88,25 +134,11 @@ router.delete("/products/:id", async (req, res) => {
     const deletedProduct = await Product.findByIdAndDelete(req.params.id);
     if (!deletedProduct)
       return res.status(404).json({ message: "Product not found" });
+
     res.json({ message: "Product deleted successfully" });
   } catch (error) {
-    res.status(500).json({ message: "Error deleting product", error });
-  }
-});
-
-router.put("/products/:id", async (req, res) => {
-  try {
-    const { name, price, image } = req.body;
-    const updatedProduct = await Product.findByIdAndUpdate(
-      req.params.id,
-      { name, price, image },
-      { new: true }
-    );
-    if (!updatedProduct)
-      return res.status(404).json({ message: "Product not found" });
-    res.status(200).json(updatedProduct);
-  } catch (error) {
-    res.status(500).json({ message: "Error updating product", error });
+    console.error("Error deleting product:", error);
+    res.status(500).json({ message: "Error deleting product", error: error.message });
   }
 });
 
@@ -114,10 +146,12 @@ router.get("/carts", async (req, res) => {
   try {
     const carts = await Cart.find()
       .populate("userId", "name email")
-      .populate("items.productId", "name price image");
+      .populate("items.productId", "name price image category");
+
     res.status(200).json(carts);
   } catch (error) {
-    res.status(500).json({ message: "Error fetching carts", error });
+    console.error("Error fetching carts:", error);
+    res.status(500).json({ message: "Error fetching carts", error: error.message });
   }
 });
 
@@ -125,12 +159,13 @@ router.get("/orders", async (req, res) => {
   try {
     const orders = await Order.find()
       .populate("userId", "name email")
-      .populate("items.productId", "name price image");
+      .populate("items.productId", "name price image category");
 
-    const validOrders = orders.filter((order) => order.userId !== null);
+    const validOrders = orders.filter(order => order.userId !== null);
     res.status(200).json(validOrders);
   } catch (error) {
-    res.status(500).json({ message: "Error fetching orders", error });
+    console.error("Error fetching orders:", error);
+    res.status(500).json({ message: "Error fetching orders", error: error.message });
   }
 });
 

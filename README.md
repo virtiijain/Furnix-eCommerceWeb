@@ -40,4 +40,3 @@ The project also includes a **fully functional Admin Panel** and is now being en
 | **State Management** | React Hooks / Context API |
 | **Authentication** | JWT, bcrypt, Express Validator |
 | **DevOps / Deployment** | Docker, GitHub Actions (CI/CD), Netlify (Frontend), Render / Vercel (Backend) |
-
