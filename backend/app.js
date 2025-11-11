@@ -9,17 +9,24 @@ import wishlistRoutes from "./routes/wishlistRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import adminRoutes from "./routes/admin/adminRoutes.js";
 import adminAuthRoutes from "./routes/admin/adminAuthRoutes.js";
-import UserAuthRoutes from "./routes/UserAuthRoutes.js"
+import UserAuthRoutes from "./routes/UserAuthRoutes.js";
 import protectedRoutes from "./routes/protectedRoutes.js";
 
 const app = express();
+const allowedOrigins = ["http://localhost:5173", "http://localhost:4173"];
 
 app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
     credentials: true,
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
