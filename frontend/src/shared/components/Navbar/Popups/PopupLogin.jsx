@@ -9,41 +9,38 @@ const PopupLogin = ({ onClose }) => {
   const [loading, setLoading] = useState(false);
   const [notification, setNotification] = useState({ message: "", type: "success" });
 
-  const handleLogin = async (e) => {
+const handleLogin = async (e) => {
   e.preventDefault();
   setLoading(true);
 
   try {
-    const res = await API.post("/auth/login", { email, password });
+    const res = await API.post("/auth/login", { email, password }, { withCredentials: true });
+    const data = res.data;
 
-    const data = await res.json();
-    console.log(data.user);
+    localStorage.setItem("user", JSON.stringify(data.user));
+    localStorage.setItem("token", data.token);
 
-    if (res.ok) {
-      localStorage.setItem("user", JSON.stringify(data.user));
-      localStorage.setItem("token", data.token);
+    const userName = data.user?.name || data.user?.email || "User";
 
-      const userName = data.user?.name || data.user?.email || "User";
+    setNotification({ message: `Welcome back, ${userName}!`, type: "success" });
 
-      setNotification({ message: `Welcome back, ${userName}!`, type: "success" });
-
-      setTimeout(() => {
-        setNotification({ message: "", type: "success" });
-        onClose();
-        window.location.reload();
-      }, 1500);
-    } else {
-      setNotification({ message: data.message || "Invalid credentials", type: "error" });
-      setTimeout(() => setNotification({ message: "", type: "success" }), 3000);
-    }
+    setTimeout(() => {
+      setNotification({ message: "", type: "success" });
+      onClose();
+      window.location.reload();
+    }, 1500);
   } catch (err) {
     console.error(err);
-    setNotification({ message: "Something went wrong. Try again later.", type: "error" });
+    const message =
+      err.response?.data?.message || "Invalid credentials or something went wrong.";
+    setNotification({ message, type: "error" });
+
     setTimeout(() => setNotification({ message: "", type: "success" }), 3000);
   } finally {
     setLoading(false);
   }
 };
+
 
 
   return (
