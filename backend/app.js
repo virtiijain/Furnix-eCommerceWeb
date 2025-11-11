@@ -17,6 +17,7 @@ import protectedRoutes from "./routes/protectedRoutes.js";
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:4173",
@@ -26,9 +27,9 @@ const allowedOrigins = [
 
 app.use(express.json());
 app.use(cookieParser());
+
 app.use(
   cors({
-    credentials: true,
     origin: (origin, callback) => {
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
@@ -36,8 +37,15 @@ app.use(
         callback(new Error("Not allowed by CORS"));
       }
     },
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "cache-control",
+      "X-Requested-With",
+      "Accept",
+    ],
   })
 );
 
