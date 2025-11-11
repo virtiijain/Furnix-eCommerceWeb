@@ -17,7 +17,11 @@ import protectedRoutes from "./routes/protectedRoutes.js";
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const allowedOrigins = ["http://localhost:5173", "http://localhost:4173"];
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:4173",
+  "https://e-commerce-web-umber-one.vercel.app",
+];
 
 app.use(express.json());
 app.use(cookieParser());
