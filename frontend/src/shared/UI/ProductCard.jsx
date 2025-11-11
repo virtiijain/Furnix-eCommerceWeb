@@ -1,12 +1,18 @@
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
+const BASE_URL = import.meta.env.VITE_BACKEND_URL || "https://furnix-ecommerceweb.onrender.com";
+
 const ProductCard = ({ product, onAddToCart, onAddToWishlist }) => {
+  const imageUrl = product.image.startsWith("http")
+    ? product.image
+    : `${BASE_URL}${product.image.startsWith("/") ? product.image : `/${product.image}`}`;
+
   return (
     <div className="border border-slate-500 p-4 rounded-lg hover:shadow-md transition">
       <Link to={`/product/${product._id}`}>
         <img
-          src={product.image}
+          src={imageUrl}
           alt={product.name}
           className="aspect-square object-cover rounded-md w-full cursor-pointer"
         />

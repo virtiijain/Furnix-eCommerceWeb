@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import path from "path";
+import { fileURLToPath } from "url";
 
 import userRoutes from "./routes/userRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
@@ -13,6 +15,8 @@ import UserAuthRoutes from "./routes/UserAuthRoutes.js";
 import protectedRoutes from "./routes/protectedRoutes.js";
 
 const app = express();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const allowedOrigins = ["http://localhost:5173", "http://localhost:4173"];
 
 app.use(express.json());
@@ -43,7 +47,7 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/adminAuth", adminAuthRoutes);
 
 app.use("/api", protectedRoutes);
-app.use("/images", express.static("images"));
+app.use("/images", express.static(path.join(__dirname, "images")));
 
 app.get("/", (req, res) => {
   res.send("Server is up & MongoDB is connected!");
