@@ -9,21 +9,28 @@ import { IoIosArrowForward } from "react-icons/io";
 import PropTypes from "prop-types";
 import { API } from "../../../api";
 
-const ProductCard = ({ product }) => (
-  <div className="border border-gray-400 rounded-lg p-5 text-center bg-white hover:shadow-md">
-    <img
-      src={product.image}
-      alt={product.name}
-      className="w-full h-40 object-contain mb-3"
-    />
-    <h3 className="text-md text-gray-700">{product.name}</h3>
-    <Link to={`/product/${product._id || product.id}`}>
-      <button className="mt-3 text-xs lg:text-sm border rounded px-3 py-1 inline-flex items-center gap-1 hover:bg-gray-100">
-        Shop Now <IoIosArrowForward />
-      </button>
-    </Link>
-  </div>
-);
+const BACKEND_URL = "https://furnix-ecommerceweb.onrender.com"; 
+
+const ProductCard = ({ product }) => {
+  const imageUrl =
+    product.image.startsWith("http") ? product.image : `${BACKEND_URL}/${product.image}`;
+
+  return (
+    <div className="border border-gray-400 rounded-lg p-5 text-center bg-white hover:shadow-md">
+      <img
+        src={imageUrl}
+        alt={product.name}
+        className="w-full h-40 object-contain mb-3"
+      />
+      <h3 className="text-md text-gray-700">{product.name}</h3>
+      <Link to={`/product/${product._id || product.id}`}>
+        <button className="mt-3 text-xs lg:text-sm border rounded px-3 py-1 inline-flex items-center gap-1 hover:bg-gray-100">
+          Shop Now <IoIosArrowForward />
+        </button>
+      </Link>
+    </div>
+  );
+};
 
 const Featured = () => {
   const [products, setProducts] = useState([]);
@@ -31,21 +38,25 @@ const Featured = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-  const fetchFeatured = async () => {
-    try {
-      const res = await API.get("/api/products");
-      setProducts(res.data.slice(0, 6)); 
-    } catch (err) {
-      setError(err.message);
-      console.error("Error fetching featured products:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+    const fetchFeatured = async () => {
+      try {
+        const res = await API.get("/api/products");
+        // prepend backend URL to images if needed
+        const updatedProducts = res.data.slice(0, 6).map(p => ({
+          ...p,
+          image: p.image.startsWith("http") ? p.image : `${BACKEND_URL}/${p.image}`,
+        }));
+        setProducts(updatedProducts);
+      } catch (err) {
+        setError(err.message);
+        console.error("Error fetching featured products:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  fetchFeatured();
-}, []);
-
+    fetchFeatured();
+  }, []);
 
   if (loading)
     return <p className="text-center py-10">Loading featured products...</p>;

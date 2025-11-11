@@ -21,6 +21,7 @@ const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:4173",
   "https://e-commerce-web-umber-one.vercel.app",
+  "https://furnix-ecommerceweb.onrender.com",
 ];
 
 app.use(express.json());
