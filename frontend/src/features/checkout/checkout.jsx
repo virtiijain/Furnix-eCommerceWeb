@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import PaymentModal from "../../shared/components/common/PaymentModal";
 import OrderSummary from "../checkout/components/OrderSummary";
 import CheckoutDetails from "../checkout/components/CheckoutDetails";
+import { API } from "../../api";
 
 const Checkout = () => {
   const [checkoutData, setCheckoutData] = useState(null);
@@ -59,22 +60,17 @@ const Checkout = () => {
     }
 
     try {
-      const res = await fetch("http://localhost:5500/api/orders", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId,
-          items: checkoutData.cartItems.map((item) => ({
-            productId: item.productId._id,
-            quantity: item.quantity || 1,
-          })),
-          totalPrice: checkoutData.totalPrice,
-          address,
-        }),
+      const res = await API.post("/api/orders", {
+        userId,
+        items: checkoutData.cartItems.map((item) => ({
+          productId: item.productId._id,
+          quantity: item.quantity || 1,
+        })),
+        totalPrice: checkoutData.totalPrice,
+        address,
       });
 
-      const data = await res.json();
-      console.log("Order placed:", data);
+      console.log("Order placed:", res.data);
       localStorage.removeItem("checkoutData");
       setSuccessMsg("Order placed successfully!");
       setTimeout(() => {

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import Sidebar from "./components/Sidebar";
 import AdminNavbar from "../admin/components/AdminNavbar";
 import Notification from "../../shared/components/common/Notification";
@@ -11,6 +10,7 @@ import {
   Mail,
   Shield,
 } from "lucide-react";
+import { API } from "../../api";
 
 const Dashboard = () => {
   const [users, setUsers] = useState([]);
@@ -22,11 +22,11 @@ const Dashboard = () => {
   const [editingProduct, setEditingProduct] = useState(null);
   const [editData, setEditData] = useState({ name: "", price: 0, image: "" });
   const [newProduct, setNewProduct] = useState({
-  name: "",
-  price: "",
-  image: "",
-  category: "",
-});
+    name: "",
+    price: "",
+    image: "",
+    category: "",
+  });
   const [notification, setNotification] = useState({
     message: "",
     type: "success",
@@ -50,10 +50,10 @@ const Dashboard = () => {
 
         const config = { headers: { Authorization: `Bearer ${token}` } };
         const [usersRes, ordersRes, productsRes, cartsRes] = await Promise.all([
-          axios.get("http://localhost:5500/api/admin/users", config),
-          axios.get("http://localhost:5500/api/admin/orders", config),
-          axios.get("http://localhost:5500/api/admin/products", config),
-          axios.get("http://localhost:5500/api/admin/carts", config),
+          API.get("/api/admin/users", config),
+          API.get("/api/admin/orders", config),
+          API.get("/api/admin/products", config),
+          API.get("/api/admin/carts", config),
         ]);
 
         setUsers(usersRes.data);
@@ -91,7 +91,7 @@ const Dashboard = () => {
     try {
       const token = localStorage.getItem("adminToken");
       const config = { headers: { Authorization: `Bearer ${token}` } };
-      await axios.delete(`http://localhost:5500/api/admin/users/${id}`, config);
+      await API.delete(`/api/admin/users/${id}`, config);
       setUsers(users.filter((u) => u._id !== id));
       setOrders(orders.filter((o) => o.userId?._id !== id));
       setCarts(carts.filter((c) => c.userId?._id !== id));
@@ -109,10 +109,7 @@ const Dashboard = () => {
     try {
       const token = localStorage.getItem("adminToken");
       const config = { headers: { Authorization: `Bearer ${token}` } };
-      const res = await axios.get(
-        `http://localhost:5500/api/admin/users/${userId}/orders`,
-        config
-      );
+      const res = await API.get(`/api/admin/users/${userId}/orders`, config);
       setOrders(res.data);
       setSelectedUser(userId);
       setActiveTab("orders");
@@ -130,10 +127,7 @@ const Dashboard = () => {
     try {
       const token = localStorage.getItem("adminToken");
       const config = { headers: { Authorization: `Bearer ${token}` } };
-      await axios.delete(
-        `http://localhost:5500/api/admin/products/${id}`,
-        config
-      );
+      await API.delete(`/api/admin/products/${id}`, config);
       setProducts(products.filter((p) => p._id !== id));
       setNotification({
         message: "Product deleted successfully.",
@@ -154,34 +148,27 @@ const Dashboard = () => {
         return;
       }
 
-      const response = await fetch("http://localhost:5500/api/admin/products", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
+      const res = await API.post(
+        "/api/admin/products",
+        {
           name: newProduct.name,
           price: Number(newProduct.price),
           image:
             newProduct.image ||
             "https://via.placeholder.com/300x200.png?text=Product+Image",
           category: newProduct.category,
-        }),
-      });
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
-      const data = await response.json();
-
-      if (response.ok) {
-        setProducts([...products, data.newProduct]);
-        setNewProduct({ name: "", price: "", image: "", category: "" });
-        alert("✅ Product added successfully!");
-      } else {
-        alert(data.message || "Error adding product");
-      }
+      setProducts([...products, res.data.newProduct]);
+      setNewProduct({ name: "", price: "", image: "", category: "" });
+      alert("Product added successfully!");
     } catch (error) {
-      console.error("Error:", error);
-      alert("Something went wrong");
+      console.error("Error adding product:", error);
+      alert(error.response?.data?.message || "Something went wrong");
     }
   };
 
@@ -204,8 +191,8 @@ const Dashboard = () => {
           Authorization: `Bearer ${token}`,
         },
       };
-      const res = await axios.put(
-        `http://localhost:5500/api/admin/products/${editingProduct._id}`,
+      const res = await API.put(
+        `/api/admin/products/${editingProduct._id}`,
         editData,
         config
       );
@@ -406,159 +393,158 @@ const Dashboard = () => {
     </div>
   );
 
-  
-const renderProducts = () => (
-  <div>
-    <h2 className="text-xl lg:text-2xl font-medium text-gray-800 mb-6 text-center sm:text-left">
-      Manage Products
-    </h2>
+  const renderProducts = () => (
+    <div>
+      <h2 className="text-xl lg:text-2xl font-medium text-gray-800 mb-6 text-center sm:text-left">
+        Manage Products
+      </h2>
 
-    <div className="mb-6 bg-white p-4 rounded-xl shadow">
-      <h3 className="text-lg font-semibold text-gray-700 mb-4">
-        Add New Product
-      </h3>
+      <div className="mb-6 bg-white p-4 rounded-xl shadow">
+        <h3 className="text-lg font-semibold text-gray-700 mb-4">
+          Add New Product
+        </h3>
 
-      <div className="grid sm:grid-cols-4 gap-3">
-        <input
-          type="text"
-          placeholder="Product Name"
-          value={newProduct.name}
-          onChange={(e) =>
-            setNewProduct({ ...newProduct, name: e.target.value })
-          }
-          className="border p-2 rounded"
-        />
+        <div className="grid sm:grid-cols-4 gap-3">
+          <input
+            type="text"
+            placeholder="Product Name"
+            value={newProduct.name}
+            onChange={(e) =>
+              setNewProduct({ ...newProduct, name: e.target.value })
+            }
+            className="border p-2 rounded"
+          />
 
-        <input
-          type="number"
-          placeholder="Price"
-          value={newProduct.price}
-          onChange={(e) =>
-            setNewProduct({ ...newProduct, price: e.target.value })
-          }
-          className="border p-2 rounded"
-        />
+          <input
+            type="number"
+            placeholder="Price"
+            value={newProduct.price}
+            onChange={(e) =>
+              setNewProduct({ ...newProduct, price: e.target.value })
+            }
+            className="border p-2 rounded"
+          />
 
-        <input
-          type="text"
-          placeholder="Image URL"
-          value={newProduct.image}
-          onChange={(e) =>
-            setNewProduct({ ...newProduct, image: e.target.value })
-          }
-          className="border p-2 rounded"
-        />
+          <input
+            type="text"
+            placeholder="Image URL"
+            value={newProduct.image}
+            onChange={(e) =>
+              setNewProduct({ ...newProduct, image: e.target.value })
+            }
+            className="border p-2 rounded"
+          />
 
-        <input
-          type="text"
-          placeholder="Category"
-          value={newProduct.category}
-          onChange={(e) =>
-            setNewProduct({ ...newProduct, category: e.target.value })
-          }
-          className="border p-2 rounded"
-        />
+          <input
+            type="text"
+            placeholder="Category"
+            value={newProduct.category}
+            onChange={(e) =>
+              setNewProduct({ ...newProduct, category: e.target.value })
+            }
+            className="border p-2 rounded"
+          />
+        </div>
+
+        <button
+          onClick={handleAddProduct}
+          className="mt-4 px-5 py-2 bg-yellow-900 text-white rounded"
+        >
+          Add Product
+        </button>
       </div>
 
-      <button
-        onClick={handleAddProduct}
-        className="mt-4 px-5 py-2 bg-yellow-900 text-white rounded"
-      >
-        Add Product
-      </button>
-    </div>
-
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {products.length === 0 ? (
-        <p className="text-gray-500">No products found</p>
-      ) : (
-        products.map((p) => (
-          <div
-            key={p._id}
-            className="bg-white rounded-xl shadow hover:shadow-2xl transition transform hover:-translate-y-1 relative"
-          >
-            <img
-              src={p.image || "https://via.placeholder.com/150"}
-              alt={p.name}
-              className="w-full h-48 object-cover rounded-t-xl"
-            />
-            <div className="p-4">
-              {editingProduct?._id === p._id ? (
-                <div className="space-y-2">
-                  <input
-                    type="text"
-                    value={editData.name}
-                    onChange={(e) =>
-                      setEditData({ ...editData, name: e.target.value })
-                    }
-                    className="border p-2 w-full rounded"
-                  />
-                  <input
-                    type="number"
-                    value={editData.price}
-                    onChange={(e) =>
-                      setEditData({
-                        ...editData,
-                        price: Number(e.target.value),
-                      })
-                    }
-                    className="border p-2 w-full rounded"
-                  />
-                  <input
-                    type="text"
-                    value={editData.image}
-                    onChange={(e) =>
-                      setEditData({ ...editData, image: e.target.value })
-                    }
-                    className="border p-2 w-full rounded"
-                  />
-                  <div className="flex gap-2 mt-2">
-                    <button
-                      onClick={handleSaveEdit}
-                      className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 transition"
-                    >
-                      Save
-                    </button>
-                    <button
-                      onClick={() => setEditingProduct(null)}
-                      className="px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition"
-                    >
-                      Cancel
-                    </button>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {products.length === 0 ? (
+          <p className="text-gray-500">No products found</p>
+        ) : (
+          products.map((p) => (
+            <div
+              key={p._id}
+              className="bg-white rounded-xl shadow hover:shadow-2xl transition transform hover:-translate-y-1 relative"
+            >
+              <img
+                src={p.image || "https://via.placeholder.com/150"}
+                alt={p.name}
+                className="w-full h-48 object-cover rounded-t-xl"
+              />
+              <div className="p-4">
+                {editingProduct?._id === p._id ? (
+                  <div className="space-y-2">
+                    <input
+                      type="text"
+                      value={editData.name}
+                      onChange={(e) =>
+                        setEditData({ ...editData, name: e.target.value })
+                      }
+                      className="border p-2 w-full rounded"
+                    />
+                    <input
+                      type="number"
+                      value={editData.price}
+                      onChange={(e) =>
+                        setEditData({
+                          ...editData,
+                          price: Number(e.target.value),
+                        })
+                      }
+                      className="border p-2 w-full rounded"
+                    />
+                    <input
+                      type="text"
+                      value={editData.image}
+                      onChange={(e) =>
+                        setEditData({ ...editData, image: e.target.value })
+                      }
+                      className="border p-2 w-full rounded"
+                    />
+                    <div className="flex gap-2 mt-2">
+                      <button
+                        onClick={handleSaveEdit}
+                        className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 transition"
+                      >
+                        Save
+                      </button>
+                      <button
+                        onClick={() => setEditingProduct(null)}
+                        className="px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition"
+                      >
+                        Cancel
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ) : (
-                <>
-                  <h3 className="text-lg font-semibold text-gray-700">
-                    {p.name}
-                  </h3>
-                  <p className="text-gray-600 mb-2">₹{p.price}</p>
-                  <p className="text-gray-500 text-sm mb-2">
-                    Category: {p.category}
-                  </p>
-                  <div className="flex justify-between gap-2 flex-wrap">
-                    <button
-                      onClick={() => handleOpenEdit(p)}
-                      className="px-5 py-1 bg-yellow-900 text-white rounded"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDeleteProduct(p._id)}
-                      className="px-5 py-1 border-2 border-red-700 text-black rounded"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </>
-              )}
+                ) : (
+                  <>
+                    <h3 className="text-lg font-semibold text-gray-700">
+                      {p.name}
+                    </h3>
+                    <p className="text-gray-600 mb-2">₹{p.price}</p>
+                    <p className="text-gray-500 text-sm mb-2">
+                      Category: {p.category}
+                    </p>
+                    <div className="flex justify-between gap-2 flex-wrap">
+                      <button
+                        onClick={() => handleOpenEdit(p)}
+                        className="px-5 py-1 bg-yellow-900 text-white rounded"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDeleteProduct(p._id)}
+                        className="px-5 py-1 border-2 border-red-700 text-black rounded"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
-          </div>
-        ))
-      )}
+          ))
+        )}
+      </div>
     </div>
-  </div>
-);
+  );
 
   const renderCarts = () => (
     <div>

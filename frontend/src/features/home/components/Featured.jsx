@@ -7,6 +7,7 @@ import "swiper/css/pagination";
 import { Link } from "react-router-dom";
 import { IoIosArrowForward } from "react-icons/io";
 import PropTypes from "prop-types";
+import { API } from "../../../api";
 
 const ProductCard = ({ product }) => (
   <div className="border border-gray-400 rounded-lg p-5 text-center bg-white hover:shadow-md">
@@ -30,22 +31,21 @@ const Featured = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchFeatured = async () => {
-      try {
-        const res = await fetch("http://localhost:5500/api/products");
-        if (!res.ok) throw new Error("Failed to fetch products");
-        const data = await res.json();
-        setProducts(data.slice(0, 6));
-      } catch (err) {
-        setError(err.message);
-        console.error("Error fetching featured products:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchFeatured = async () => {
+    try {
+      const res = await API.get("/api/products");
+      setProducts(res.data.slice(0, 6)); 
+    } catch (err) {
+      setError(err.message);
+      console.error("Error fetching featured products:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchFeatured();
-  }, []);
+  fetchFeatured();
+}, []);
+
 
   if (loading)
     return <p className="text-center py-10">Loading featured products...</p>;

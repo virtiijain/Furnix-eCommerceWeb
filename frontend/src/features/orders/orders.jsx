@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import OrderCard from "../orders/components/OrderCard";
+import { API } from "../../api";
 
 const MyOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -16,9 +17,8 @@ const MyOrders = () => {
 
     const fetchOrders = async () => {
       try {
-        const res = await fetch(`http://localhost:5500/api/orders/${userId}`);
-        const data = await res.json();
-        if (data.success) setOrders(data.orders);
+        const res = await API.get(`/api/orders/${userId}`);
+        if (res.data.success) setOrders(res.data.orders);
       } catch (err) {
         console.error("Error fetching orders:", err);
       }

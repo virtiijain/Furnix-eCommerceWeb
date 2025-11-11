@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { API } from "../../../api";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -18,14 +19,12 @@ const ProductDetail = () => {
 
     const fetchProduct = async () => {
       try {
-        const res = await fetch(`http://localhost:5500/api/products/${id}`);
-        if (!res.ok) throw new Error("Failed to fetch product");
-
-        const data = await res.json();
-        setProduct(data);
+        const res = await API.get(`/api/products/${id}`);
+        setProduct(res.data);
         setLoading(false);
       } catch (error) {
         console.log("Error fetching product:", error);
+      } finally {
         setLoading(false);
       }
     };

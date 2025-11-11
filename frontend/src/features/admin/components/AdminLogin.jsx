@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { FaUserShield } from "react-icons/fa";
 import Notification from "../../../shared/components/common/Notification";
+import { API } from "../../../api";
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
@@ -17,21 +18,9 @@ const AdminLogin = () => {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5500/api/adminAuth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+      const res = await API.post("/api/adminAuth/login", { email, password });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        setNotification({
-          message: data.message || "Invalid credentials",
-          type: "error",
-        });
-        return;
-      }
+      const data = res.data;
 
       localStorage.setItem("adminToken", data.token);
       localStorage.setItem("admin", JSON.stringify(data.admin));
@@ -47,7 +36,7 @@ const AdminLogin = () => {
     } catch (err) {
       console.error(err);
       setNotification({
-        message: "Something went wrong. Try again later.",
+        message: err.response?.data?.message || "Invalid credentials",
         type: "error",
       });
     } finally {

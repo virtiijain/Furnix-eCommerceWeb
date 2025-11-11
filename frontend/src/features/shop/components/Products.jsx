@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import FilterBar from "./FilterBar";
 import Notification from "../../../shared/components/common/Notification";
 import ProductCard from "../../../shared/UI/ProductCard";
+import { API } from "../../../api";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -17,9 +18,8 @@ const Products = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch("http://localhost:5500/api/products");
-        const data = await res.json();
-        setProducts(data);
+        const res = await API.get("/api/products");
+        setProducts(res.data);
       } catch (err) {
         console.error("Error fetching products:", err);
         setNotification({ message: "Failed to fetch products!", type: "error" });

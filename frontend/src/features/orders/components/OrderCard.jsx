@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 const OrderCard = ({ order }) => {
   return (
     <div className="bg-white border rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md transition w-full">
-      {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-3 gap-2 sm:gap-0">
         <h3 className="text-base sm:text-lg font-semibold text-gray-800 flex items-center gap-2">
           <Package className="w-5 h-5 text-yellow-900" />
@@ -16,7 +15,6 @@ const OrderCard = ({ order }) => {
         </span>
       </div>
 
-      {/* Items */}
       <div className="border-t pt-3 space-y-3">
         {order.items.map((item) => (
           <div
