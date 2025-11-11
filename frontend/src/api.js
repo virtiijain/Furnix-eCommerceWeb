@@ -1,5 +1,5 @@
 import axios from "axios";
 
 export const API = axios.create({
-  baseURL: "https://furnix-ecommerceweb.onrender.com" 
+  baseURL: import.meta.env.VITE_BACKEND_URL
 });

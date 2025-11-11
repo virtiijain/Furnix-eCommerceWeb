@@ -9,27 +9,47 @@ import { IoIosArrowForward } from "react-icons/io";
 import PropTypes from "prop-types";
 import { API } from "../../../api";
 
-const BACKEND_URL = "https://furnix-ecommerceweb.onrender.com"; 
+const BASE_URL =
+  import.meta.env.VITE_BACKEND_URL ||
+  "https://furnix-ecommerceweb.onrender.com";
 
 const ProductCard = ({ product }) => {
-  const imageUrl =
-    product.image.startsWith("http") ? product.image : `${BACKEND_URL}/${product.image}`;
+  // Safe image URL with fallback
+  const imageUrl = product.image
+    ? product.image.startsWith("http")
+      ? product.image
+      : `${BASE_URL}${
+          product.image.startsWith("/") ? product.image : `/${product.image}`
+        }`
+    : "/placeholder.png"; // fallback if image is missing
 
   return (
     <div className="border border-gray-400 rounded-lg p-5 text-center bg-white hover:shadow-md">
-      <img
-        src={imageUrl}
-        alt={product.name}
-        className="w-full h-40 object-contain mb-3"
-      />
+      <Link to={`/product/${product._id}`}>
+        <img
+          src={imageUrl}
+          alt={product.name}
+          className="w-full h-40 object-contain mb-3"
+        />
+      </Link>
       <h3 className="text-md text-gray-700">{product.name}</h3>
-      <Link to={`/product/${product._id || product.id}`}>
+      <p className="text-gray-500 font-medium mb-2">₹{product.price}</p>
+      <Link to={`/product/${product._id}`}>
         <button className="mt-3 text-xs lg:text-sm border rounded px-3 py-1 inline-flex items-center gap-1 hover:bg-gray-100">
           Shop Now <IoIosArrowForward />
         </button>
       </Link>
     </div>
   );
+};
+
+ProductCard.propTypes = {
+  product: PropTypes.shape({
+    _id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    name: PropTypes.string.isRequired,
+    image: PropTypes.string,
+    price: PropTypes.number,
+  }).isRequired,
 };
 
 const Featured = () => {
@@ -40,12 +60,27 @@ const Featured = () => {
   useEffect(() => {
     const fetchFeatured = async () => {
       try {
-        const res = await API.get("/api/products");
-        // prepend backend URL to images if needed
-        const updatedProducts = res.data.slice(0, 6).map(p => ({
-          ...p,
-          image: p.image.startsWith("http") ? p.image : `${BACKEND_URL}/${p.image}`,
+        const res = await API.get("/api/products", {
+  headers: { "Cache-Control": "no-cache" },
+});
+
+        const updatedProducts = res.data.slice(0, 6).map((p) => ({
+          _id: p._id || p.id,
+          name: p.name || "Unnamed Product",
+          price: p.price || 0,
+          image: p.image
+            ? p.image.startsWith("http")
+              ? p.image
+              : p.image.startsWith("/images")
+              ? `${BASE_URL}${p.image}`
+              : `${BASE_URL}/images/${p.image}`
+            : "/placeholder.png",
         }));
+
+        console.log(
+          "Featured products URLs:",
+          updatedProducts.map((p) => p.image)
+        );
         setProducts(updatedProducts);
       } catch (err) {
         setError(err.message);
@@ -84,8 +119,8 @@ const Featured = () => {
         }}
         className="[--swiper-navigation-color:#78350f] [--swiper-pagination-color:#78350f]"
       >
-        {products.map((product, i) => (
-          <SwiperSlide key={product._id || product.id || i}>
+        {products.map((product) => (
+          <SwiperSlide key={product._id}>
             <ProductCard product={product} />
           </SwiperSlide>
         ))}
@@ -95,12 +130,3 @@ const Featured = () => {
 };
 
 export default Featured;
-
-ProductCard.propTypes = {
-  product: PropTypes.shape({
-    _id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    name: PropTypes.string.isRequired,
-    image: PropTypes.string.isRequired,
-  }).isRequired,
-};

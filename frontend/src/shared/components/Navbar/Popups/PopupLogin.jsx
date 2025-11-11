@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { IoClose } from "react-icons/io5";
 import PropTypes from "prop-types";
+import { API } from "../../../../api";
 
 const PopupLogin = ({ onClose }) => {
   const [email, setEmail] = useState("");
@@ -13,11 +14,7 @@ const PopupLogin = ({ onClose }) => {
   setLoading(true);
 
   try {
-    const res = await fetch("http://localhost:5500/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+    const res = await API.post("/auth/login", { email, password });
 
     const data = await res.json();
     console.log(data.user);

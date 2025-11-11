@@ -1,7 +1,6 @@
 import { IoClose } from "react-icons/io5";
 import PropTypes from "prop-types";
 import { useState } from "react";
-import axios from "axios";
 import Notification from "../../common/Notification"; 
 import { API } from "../../../../api";
 
@@ -22,11 +21,7 @@ const PopupSignup = ({ onClose }) => {
     setError("");
 
     try {
-      const res = await API.get("http://localhost:5500/auth/signup", {
-        name,
-        email,
-        password,
-      });
+      const res = await API.post("/auth/signup", { name, email, password });
 
       const { token, user } = res.data;
 
