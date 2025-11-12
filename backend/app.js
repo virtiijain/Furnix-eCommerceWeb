@@ -22,7 +22,7 @@ const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:4173",
   "https://e-commerce-webb.vercel.app",
-  "https://furnix-ecommerceweb.onrender.com",
+  "https://ecommerce-web-01cl.onrender.com",
 ];
 
 app.use(express.json());
