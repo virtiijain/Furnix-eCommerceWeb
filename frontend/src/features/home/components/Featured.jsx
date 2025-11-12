@@ -14,14 +14,14 @@ const BASE_URL =
   "https://furnix-ecommerceweb.onrender.com";
 
 const ProductCard = ({ product }) => {
-  // Safe image URL with fallback
+
   const imageUrl = product.image
     ? product.image.startsWith("http")
       ? product.image
       : `${BASE_URL}${
           product.image.startsWith("/") ? product.image : `/${product.image}`
         }`
-    : "/placeholder.png"; // fallback if image is missing
+    : "/placeholder.png"; 
 
   return (
     <div className="border border-gray-400 rounded-lg p-5 text-center bg-white hover:shadow-md">
