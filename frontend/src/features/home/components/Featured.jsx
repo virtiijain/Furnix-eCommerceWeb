@@ -11,7 +11,7 @@ import { API } from "../../../api";
 
 const BASE_URL =
   import.meta.env.VITE_BACKEND_URL ||
-  "https://ecommerce-web-01cl.onrender.com";
+  "https://ecommerceweb-backend.onrender.com";
 
 const ProductCard = ({ product }) => {
 

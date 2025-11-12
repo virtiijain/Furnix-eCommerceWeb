@@ -22,7 +22,7 @@ const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:4173",
   "https://e-commerce-webb.vercel.app",
-  "https://ecommerce-web-01cl.onrender.com",
+  "https://ecommerceweb-backend.onrender.com",
 ];
 
 app.use(express.json());
@@ -34,6 +34,7 @@ app.use(
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
+        console.log("Blocked by CORS:", origin);
         callback(new Error("Not allowed by CORS"));
       }
     },
@@ -46,6 +47,7 @@ app.use(
       "X-Requested-With",
       "Accept",
     ],
+     optionsSuccessStatus: 200,
   })
 );
 
