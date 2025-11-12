@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import OrderCard from "../orders/components/OrderCard";
 import { API } from "../../api";
 
-const BACKEND_URL = "https://furnix-ecommerceweb.onrender.com"; 
-
 const MyOrders = () => {
   const [orders, setOrders] = useState([]);
   const [userId, setUserId] = useState(null);
@@ -15,27 +13,18 @@ const MyOrders = () => {
   }, []);
 
   useEffect(() => {
-  if (!userId) return;
+    if (!userId) return;
 
-  const fetchOrders = async () => {
-    try {
-      const res = await API.get(`/api/orders/${userId}`);
-      if (res.data.success) {
-        const ordersWithFullImages = res.data.orders.map(order => ({
-          ...order,
-          items: order.items.map(item => ({
-            ...item,
-            image: item.image.startsWith("http") ? item.image : `${BACKEND_URL}/${item.image}`
-          }))
-        }));
-        setOrders(ordersWithFullImages);
+    const fetchOrders = async () => {
+      try {
+        const res = await API.get(`/api/orders/${userId}`);
+        if (res.data.success) setOrders(res.data.orders);
+      } catch (err) {
+        console.error("Error fetching orders:", err);
       }
-    } catch (err) {
-      console.error("Error fetching orders:", err);
-    }
-  };
-  fetchOrders();
-}, [userId]);
+    };
+    fetchOrders();
+  }, [userId]);
 
   return (
     <section className="min-h-screen bg-gray-50 p-4 sm:p-6">
