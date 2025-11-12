@@ -11,7 +11,7 @@ import { API } from "../../../api";
 
 const BASE_URL =
   import.meta.env.VITE_BACKEND_URL ||
-  "https://furnix-ecommerceweb.onrender.com";
+  "https://ecommerce-web-01cl.onrender.com";
 
 const ProductCard = ({ product }) => {
 
