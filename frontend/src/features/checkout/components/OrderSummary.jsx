@@ -3,9 +3,7 @@ import { X } from "lucide-react";
 
 const OrderSummary = ({ cartItems, onQuantityChange, onRemove }) => (
   <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6 border">
-    <h3 className="text-lg font-semibold mb-4 text-gray-800">
-      Order Summary
-    </h3>
+    <h3 className="text-lg font-semibold mb-4 text-gray-800">Order Summary</h3>
 
     <div className="divide-y">
       {cartItems.map((item, index) => (
@@ -15,7 +13,9 @@ const OrderSummary = ({ cartItems, onQuantityChange, onRemove }) => (
         >
           <div className="flex items-center gap-3">
             <img
-              src={item.productId?.image}
+              src={`${import.meta.env.VITE_BACKEND_URL}/${
+                item.productId?.image
+              }`}
               alt={item.productId?.name}
               className="w-16 h-16 sm:w-14 sm:h-14 rounded-lg border object-cover"
             />

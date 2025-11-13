@@ -3,7 +3,10 @@ import { X } from "lucide-react";
 
 const CartTable = ({ cartItems, handleQuantityChange, handleRemove }) => {
   const getImageSrc = (image) =>
-    image ? `/images/${image}` : "/images/default.png";
+  image
+    ? `${import.meta.env.VITE_BACKEND_URL}/images/${image}`
+    : `${import.meta.env.VITE_BACKEND_URL}/images/default.png`;
+
 
   return (
     <table className="w-full text-left hidden md:table">

@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import { Heart } from "lucide-react";
-import {
-  getWishlist,
-  removeFromWishlist,
-} from "../../api/wishlist";
-import { addToCart } from "../../cartapi"; 
+import { getWishlist, removeFromWishlist } from "../../api/wishlist";
+import { addToCart } from "../../cartapi";
 import Notification from "../../shared/components/common/Notification";
 
 const Wishlist = () => {
   const [wishlistItems, setWishlistItems] = useState([]);
   const [userId, setUserId] = useState(null);
-  const [notification, setNotification] = useState({ message: "", type: "success" });
+  const [notification, setNotification] = useState({
+    message: "",
+    type: "success",
+  });
 
   const showNotification = (message, type = "success") => {
     setNotification({ message, type });
@@ -69,7 +69,6 @@ const Wishlist = () => {
 
   return (
     <section className="min-h-screen p-4 sm:p-6 bg-gray-50">
-      {/* Notification */}
       {notification.message && (
         <Notification
           message={notification.message}
@@ -90,7 +89,6 @@ const Wishlist = () => {
           </div>
         ) : (
           <>
-            {/* Desktop Table */}
             <div className="hidden md:block bg-white rounded-2xl shadow p-6 border overflow-x-auto">
               <table className="w-full text-left">
                 <thead>
@@ -110,7 +108,10 @@ const Wishlist = () => {
                 </thead>
                 <tbody>
                   {wishlistItems.map((item) => (
-                    <tr key={item._id} className="border-b hover:bg-gray-50 transition">
+                    <tr
+                      key={item._id}
+                      className="border-b hover:bg-gray-50 transition"
+                    >
                       <td className="py-4 text-center">
                         <button
                           onClick={() => handleRemove(item.productId._id)}
@@ -121,10 +122,13 @@ const Wishlist = () => {
                       </td>
                       <td className="py-4 flex items-center gap-4">
                         <img
-                          src={`${item.productId?.image}?v=${Date.now()}`}
+                          src={`${import.meta.env.VITE_BACKEND_URL}/images/${
+                            item.productId?.image
+                          }?v=${Date.now()}`}
                           alt={item.productId?.name}
                           className="w-16 h-16 rounded-lg object-cover border"
                         />
+
                         <div>
                           <h3 className="font-semibold text-gray-800">
                             {item.productId?.name}
@@ -150,8 +154,6 @@ const Wishlist = () => {
                 </tbody>
               </table>
             </div>
-
-            {/* Mobile Cards */}
             <div className="flex flex-col gap-4 md:hidden">
               {wishlistItems.map((item) => (
                 <div
@@ -160,16 +162,23 @@ const Wishlist = () => {
                 >
                   <div className="flex items-start sm:items-center gap-4 w-full">
                     <img
-                      src={`${item.productId?.image}?v=${Date.now()}`}
+                      src={`${import.meta.env.VITE_BACKEND_URL}/images/${
+                        item.productId?.image
+                      }?v=${Date.now()}`}
                       alt={item.productId?.name}
                       className="w-24 h-24 object-cover rounded-lg border"
                     />
+
                     <div className="flex-1">
                       <h3 className="font-semibold text-gray-800 text-base sm:text-lg">
                         {item.productId?.name}
                       </h3>
-                      <p className="text-gray-500 mt-1">₹{item.productId?.price}</p>
-                      <p className="text-green-600 mt-1 font-medium">In Stock</p>
+                      <p className="text-gray-500 mt-1">
+                        ₹{item.productId?.price}
+                      </p>
+                      <p className="text-green-600 mt-1 font-medium">
+                        In Stock
+                      </p>
                     </div>
                   </div>
 

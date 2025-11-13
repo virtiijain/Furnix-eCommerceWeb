@@ -10,6 +10,7 @@ import { openPopup, closePopup } from "../../redux/popupSlice";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import UserMenu from "./User/UserMenu";
 import Notification from "../common/Notification";
+import { API } from "../../../api";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -30,29 +31,27 @@ const Navbar = () => {
   useOutsideClick(dropdownRef, () => setDropdownOpen(false), dropdownOpen);
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    if (storedToken) {
-      fetch("http://localhost:5500/user/profile", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${storedToken}`,
-        },
+  const storedToken = localStorage.getItem("token");
+  if (storedToken) {
+    API.get("/user/profile", {
+      headers: {
+        Authorization: `Bearer ${storedToken}`,
+      },
+    })
+      .then((res) => {
+        if (res.data.user) {
+          setUser(res.data.user);
+          setToken(storedToken);
+        } else {
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          setUser(null);
+          setToken(null);
+        }
       })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.user) {
-            setUser(data.user);
-            setToken(storedToken);
-          } else {
-            localStorage.removeItem("token");
-            localStorage.removeItem("user");
-            setUser(null);
-            setToken(null);
-          }
-        })
-        .catch((err) => console.error(err));
-    }
-  }, []);
+      .catch((err) => console.error(err));
+  }
+}, []);
 
   const handleLogout = () => {
     localStorage.removeItem("token");

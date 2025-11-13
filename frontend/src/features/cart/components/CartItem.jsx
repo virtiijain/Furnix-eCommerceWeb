@@ -3,8 +3,9 @@ import { X } from "lucide-react";
 
 const CartItem = ({ item, handleQuantityChange, handleRemove }) => {
   const imageSrc = item.productId?.image
-    ? `/images/${item.productId.image}`
-    : "/images/default.png"; 
+  ? `${import.meta.env.VITE_BACKEND_URL}/images/${item.productId.image}`
+  : `${import.meta.env.VITE_BACKEND_URL}/images/default.png`;
+
   return (
     <div
       key={item._id}
