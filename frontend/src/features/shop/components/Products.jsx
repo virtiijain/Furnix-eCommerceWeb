@@ -48,30 +48,31 @@ const Products = () => {
   };
 
   const handleAddToCart = (productId) => {
-    if (!isLoggedIn)
-      return setNotification({ message: "Please login first!", type: "error" });
+  if (!isLoggedIn)
+    return setNotification({ message: "Please login first!", type: "error" });
 
-    handleAction(
-      "http://localhost:5500/api/cart",
-      "POST",
-      { userId, productId, quantity: 1 },
-      "Product added to cart!",
-      "Error adding to cart!"
-    );
-  };
+  handleAction(
+    `${import.meta.env.VITE_BACKEND_URL}/api/cart`,
+    "POST",
+    { userId, productId, quantity: 1 },
+    "Product added to cart!",
+    "Error adding to cart!"
+  );
+};
 
-  const handleAddToWishlist = (productId) => {
-    if (!isLoggedIn)
-      return setNotification({ message: "Please login first!", type: "error" });
+const handleAddToWishlist = (productId) => {
+  if (!isLoggedIn)
+    return setNotification({ message: "Please login first!", type: "error" });
 
-    handleAction(
-      "http://localhost:5500/api/wishlist",
-      "POST",
-      { userId, productId },
-      "Added to wishlist!",
-      "Error adding to wishlist!"
-    );
-  };
+  handleAction(
+    `${import.meta.env.VITE_BACKEND_URL}/api/wishlist`,
+    "POST",
+    { userId, productId },
+    "Added to wishlist!",
+    "Error adding to wishlist!"
+  );
+};
+
 
   const filteredProducts =
     selectedCategory === "all"

@@ -14,10 +14,11 @@ const WishlistItem = ({ item, onRemove, onMoveToCart }) => {
       </td>
       <td className="py-4 flex items-center gap-4">
         <img
-          src={item.productId?.image}
+          src={`${item.productId?.image}?v=${Date.now()}`}
           alt={item.productId?.name}
           className="w-16 h-16 rounded-lg object-cover border"
         />
+
         <div>
           <h3 className="font-semibold text-gray-800">
             {item.productId?.name}

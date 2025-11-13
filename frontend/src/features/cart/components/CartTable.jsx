@@ -2,6 +2,9 @@ import PropTypes from "prop-types";
 import { X } from "lucide-react";
 
 const CartTable = ({ cartItems, handleQuantityChange, handleRemove }) => {
+  const getImageSrc = (image) =>
+    image ? `/images/${image}` : "/images/default.png";
+
   return (
     <table className="w-full text-left hidden md:table">
       <thead>
@@ -20,13 +23,13 @@ const CartTable = ({ cartItems, handleQuantityChange, handleRemove }) => {
           <tr key={item._id} className="border-b hover:bg-gray-50 transition">
             <td className="py-4 flex items-center gap-4">
               <img
-                src={item.productId?.image}
-                alt={item.productId?.name}
+                src={getImageSrc(item.productId?.image)}
+                alt={item.productId?.name || "Product"}
                 className="w-16 h-16 rounded-lg object-cover border"
               />
               <div>
                 <h3 className="font-semibold text-gray-800">
-                  {item.productId?.name}
+                  {item.productId?.name || "Unnamed Product"}
                 </h3>
                 <p className="text-sm text-gray-500">Product Code</p>
               </div>
@@ -57,7 +60,7 @@ const CartTable = ({ cartItems, handleQuantityChange, handleRemove }) => {
             </td>
 
             <td className="py-4 text-center font-medium text-gray-800">
-              ₹{(item.productId?.price * item.quantity).toLocaleString()}
+              ₹{(item.productId?.price * item.quantity).toLocaleString() || "0"}
             </td>
 
             <td className="py-4 text-center">

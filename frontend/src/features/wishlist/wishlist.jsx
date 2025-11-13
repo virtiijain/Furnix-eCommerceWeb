@@ -3,12 +3,18 @@ import { Heart } from "lucide-react";
 import {
   getWishlist,
   removeFromWishlist,
-  moveToCart,
 } from "../../api/wishlist";
+import { addToCart } from "../../cartapi"; 
+import Notification from "../../shared/components/common/Notification";
 
 const Wishlist = () => {
   const [wishlistItems, setWishlistItems] = useState([]);
   const [userId, setUserId] = useState(null);
+  const [notification, setNotification] = useState({ message: "", type: "success" });
+
+  const showNotification = (message, type = "success") => {
+    setNotification({ message, type });
+  };
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -31,29 +37,47 @@ const Wishlist = () => {
   }, []);
 
   const handleRemove = async (productId) => {
-    if (!userId) return alert("Login first!");
+    if (!userId) return showNotification("Login first!", "error");
     try {
       await removeFromWishlist(userId, productId);
       setWishlistItems((prev) =>
         prev.filter((item) => item.productId._id !== productId)
       );
+      showNotification("Item removed from wishlist", "success");
     } catch (err) {
       console.error("Error removing item:", err);
+      showNotification("Failed to remove item", "error");
     }
   };
 
-  const handleMoveToCart = async (productId) => {
-    if (!userId) return alert("Login first!");
+  const handleMoveToCart = async (product) => {
+    if (!userId) return showNotification("Login first!", "error");
     try {
-      const data = await moveToCart(userId, productId);
-      if (data) await handleRemove(productId);
+      await addToCart(userId, {
+        productId: product._id,
+        quantity: 1,
+      });
+
+      await handleRemove(product._id);
+
+      showNotification(`${product.name} added to cart!`, "success");
     } catch (err) {
       console.error("Error moving to cart:", err);
+      showNotification("Failed to add to cart", "error");
     }
   };
 
   return (
     <section className="min-h-screen p-4 sm:p-6 bg-gray-50">
+      {/* Notification */}
+      {notification.message && (
+        <Notification
+          message={notification.message}
+          type={notification.type}
+          onClose={() => setNotification({ message: "", type: "success" })}
+        />
+      )}
+
       <div className="max-w-6xl mx-auto">
         <h2 className="text-xl md:text-2xl font-medium mb-6 text-gray-800 text-center sm:text-left">
           My WishList
@@ -66,6 +90,7 @@ const Wishlist = () => {
           </div>
         ) : (
           <>
+            {/* Desktop Table */}
             <div className="hidden md:block bg-white rounded-2xl shadow p-6 border overflow-x-auto">
               <table className="w-full text-left">
                 <thead>
@@ -85,10 +110,7 @@ const Wishlist = () => {
                 </thead>
                 <tbody>
                   {wishlistItems.map((item) => (
-                    <tr
-                      key={item._id}
-                      className="border-b hover:bg-gray-50 transition"
-                    >
+                    <tr key={item._id} className="border-b hover:bg-gray-50 transition">
                       <td className="py-4 text-center">
                         <button
                           onClick={() => handleRemove(item.productId._id)}
@@ -99,7 +121,7 @@ const Wishlist = () => {
                       </td>
                       <td className="py-4 flex items-center gap-4">
                         <img
-                          src={item.productId?.image}
+                          src={`${item.productId?.image}?v=${Date.now()}`}
                           alt={item.productId?.name}
                           className="w-16 h-16 rounded-lg object-cover border"
                         />
@@ -117,7 +139,7 @@ const Wishlist = () => {
                       </td>
                       <td className="py-4 text-center">
                         <button
-                          onClick={() => handleMoveToCart(item.productId._id)}
+                          onClick={() => handleMoveToCart(item.productId)}
                           className="bg-black text-white text-sm px-4 py-2 rounded-md hover:bg-gray-800 transition"
                         >
                           Add to Cart
@@ -129,6 +151,7 @@ const Wishlist = () => {
               </table>
             </div>
 
+            {/* Mobile Cards */}
             <div className="flex flex-col gap-4 md:hidden">
               {wishlistItems.map((item) => (
                 <div
@@ -137,7 +160,7 @@ const Wishlist = () => {
                 >
                   <div className="flex items-start sm:items-center gap-4 w-full">
                     <img
-                      src={item.productId?.image}
+                      src={`${item.productId?.image}?v=${Date.now()}`}
                       alt={item.productId?.name}
                       className="w-24 h-24 object-cover rounded-lg border"
                     />
@@ -145,18 +168,14 @@ const Wishlist = () => {
                       <h3 className="font-semibold text-gray-800 text-base sm:text-lg">
                         {item.productId?.name}
                       </h3>
-                      <p className="text-gray-500 mt-1">
-                        ₹{item.productId?.price}
-                      </p>
-                      <p className="text-green-600 mt-1 font-medium">
-                        In Stock
-                      </p>
+                      <p className="text-gray-500 mt-1">₹{item.productId?.price}</p>
+                      <p className="text-green-600 mt-1 font-medium">In Stock</p>
                     </div>
                   </div>
 
                   <div className="flex flex-col sm:flex-row gap-2 mt-4 sm:mt-0">
                     <button
-                      onClick={() => handleMoveToCart(item.productId._id)}
+                      onClick={() => handleMoveToCart(item.productId)}
                       className="bg-black text-white text-sm px-4 py-2 rounded-md hover:bg-gray-800 transition"
                     >
                       Add to Cart

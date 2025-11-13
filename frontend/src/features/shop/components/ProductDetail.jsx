@@ -9,9 +9,15 @@ const ProductDetail = () => {
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    const user = storedUser ? JSON.parse(storedUser) : null;
+    setUserId(user?._id);
+  }, []);
 
+  useEffect(() => {
     if (!id) {
       setLoading(false);
       return;
@@ -21,7 +27,6 @@ const ProductDetail = () => {
       try {
         const res = await API.get(`/api/products/${id}`);
         setProduct(res.data);
-        setLoading(false);
       } catch (error) {
         console.log("Error fetching product:", error);
       } finally {
@@ -31,6 +36,39 @@ const ProductDetail = () => {
 
     fetchProduct();
   }, [id]);
+
+  const addToCart = async () => {
+    if (!userId) return alert("Please log in first");
+
+    try {
+      await API.post("/api/cart", {
+        userId,
+        productId: product._id,
+        quantity,
+      });
+      navigate("/cart"); 
+    } catch (err) {
+      console.error("Error adding to cart:", err);
+    }
+  };
+
+  const buyNow = () => {
+    if (!userId) return alert("Please log in first");
+
+    const checkoutData = {
+      cartItems: [
+        {
+          _id: product._id,
+          quantity,
+          productId: product,
+        },
+      ],
+      totalPrice: product.price * quantity,
+    };
+
+    localStorage.setItem("checkoutData", JSON.stringify(checkoutData));
+    navigate("/checkout");
+  };
 
   if (loading) {
     return (
@@ -58,7 +96,7 @@ const ProductDetail = () => {
     <section className="p-8 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
       <div className="flex justify-center">
         <img
-          src={product.image}
+          src={`${import.meta.env.VITE_BACKEND_URL}/${product.image}`}
           alt={product.name}
           className="w-full max-w-sm rounded-lg object-cover shadow-md"
         />
@@ -92,11 +130,17 @@ const ProductDetail = () => {
         </div>
 
         <div className="flex flex-wrap gap-4">
-          <button className="bg-yellow-900 text-white px-6 py-3 rounded-md hover:bg-yellow-800 transition">
+          <button
+            onClick={addToCart}
+            className="bg-yellow-900 text-white px-6 py-3 rounded-md hover:bg-yellow-800 transition"
+          >
             Add to Cart
           </button>
 
-          <button className="border border-yellow-900 text-yellow-900 px-6 py-3 rounded-md hover:bg-yellow-50 transition">
+          <button
+            onClick={buyNow}
+            className="border border-yellow-900 text-yellow-900 px-6 py-3 rounded-md hover:bg-yellow-50 transition"
+          >
             Buy Now
           </button>
         </div>
