@@ -23,7 +23,13 @@ const OrderCard = ({ order }) => {
           >
             <div className="flex items-center gap-3">
               <img
-                src={`${item.productId?.image}?v=${Date.now()}`}
+                src={
+                  item.productId?.image?.startsWith("http")
+                    ? `${item.productId.image}?v=${Date.now()}`
+                    : `https://ecommerceweb-backend.onrender.com/${
+                        item.productId.image
+                      }?v=${Date.now()}`
+                }
                 alt={item.productId?.name}
                 className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg border object-cover"
               />

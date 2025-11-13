@@ -24,6 +24,10 @@ router.get("/:id", async (req, res) => {
 
 router.post("/add", async (req, res) => {
   try {
+    let { image, ...rest } = req.body;
+     if (image && !image.startsWith("http")) {
+      image = `https://ecommerceweb-backend.onrender.com/images/${image}`;
+    }
     const product = new Product(req.body);
     await product.save();
     res.status(201).json({ message: "Product added successfully!", product });
