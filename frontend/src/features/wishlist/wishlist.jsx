@@ -122,13 +122,10 @@ const Wishlist = () => {
                       </td>
                       <td className="py-4 flex items-center gap-4">
                         <img
-                          src={`${import.meta.env.VITE_BACKEND_URL}/images/${
-                            item.productId?.image
-                          }?v=${Date.now()}`}
-                          alt={item.productId?.name}
+                          src={item.productId?.image || "/placeholder.png"}
+                          alt={item.productId?.name || "Product"}
                           className="w-16 h-16 rounded-lg object-cover border"
                         />
-
                         <div>
                           <h3 className="font-semibold text-gray-800">
                             {item.productId?.name}
@@ -162,13 +159,10 @@ const Wishlist = () => {
                 >
                   <div className="flex items-start sm:items-center gap-4 w-full">
                     <img
-                      src={`${import.meta.env.VITE_BACKEND_URL}/images/${
-                        item.productId?.image
-                      }?v=${Date.now()}`}
+                      src={item.productId?.image || "/placeholder.png"}
                       alt={item.productId?.name}
                       className="w-24 h-24 object-cover rounded-lg border"
                     />
-
                     <div className="flex-1">
                       <h3 className="font-semibold text-gray-800 text-base sm:text-lg">
                         {item.productId?.name}

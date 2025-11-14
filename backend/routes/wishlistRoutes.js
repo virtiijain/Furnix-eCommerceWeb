@@ -27,7 +27,16 @@ router.post("/", async (req, res) => {
 router.get("/:userId", async (req, res) => {
   try {
     const wishlist = await Wishlist.findOne({ userId: req.params.userId }).populate("items.productId");
-    res.json({ items: wishlist ? wishlist.items : [] });
+    
+    const items = wishlist ? wishlist.items.map(item => {
+      const product = item.productId.toObject(); 
+      if (product.image && !product.image.startsWith("http")) {
+        product.image = `https://ecommerceweb-backend.onrender.com${product.image}`;
+      }
+      return { ...item.toObject(), productId: product };
+    }) : [];
+
+    res.json({ items });
   } catch (err) {
     res.status(500).json({ message: "Error fetching wishlist", error: err.message });
   }

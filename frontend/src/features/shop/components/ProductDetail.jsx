@@ -46,7 +46,7 @@ const ProductDetail = () => {
         productId: product._id,
         quantity,
       });
-      navigate("/cart"); 
+      navigate("/cart");
     } catch (err) {
       console.error("Error adding to cart:", err);
     }
@@ -96,8 +96,8 @@ const ProductDetail = () => {
     <section className="p-8 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
       <div className="flex justify-center">
         <img
-          src={`${import.meta.env.VITE_BACKEND_URL}/images/${product.image}`}
-          alt={product.name}
+          src={product.image || "/placeholder.png"}
+          alt={product.name || "Product"}
           className="w-full max-w-sm rounded-lg object-cover shadow-md"
         />
       </div>

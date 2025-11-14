@@ -2,9 +2,10 @@ import PropTypes from "prop-types";
 import { X } from "lucide-react";
 
 const CartItem = ({ item, handleQuantityChange, handleRemove }) => {
-  const imageSrc = item.productId?.image
-  ? `${import.meta.env.VITE_BACKEND_URL}/images/${item.productId.image}`
-  : `${import.meta.env.VITE_BACKEND_URL}/images/default.png`;
+  const getImageSrc = (image) =>
+    image
+      ? `${import.meta.env.VITE_BACKEND_URL}${image}`
+      : `${import.meta.env.VITE_BACKEND_URL}/images/default.png`;
 
   return (
     <div
@@ -13,9 +14,9 @@ const CartItem = ({ item, handleQuantityChange, handleRemove }) => {
     >
       <div className="flex items-center gap-4">
         <img
-          src={imageSrc}
+          src={getImageSrc(item.productId?.image)}
           alt={item.productId?.name || "Product"}
-          className="w-20 h-20 object-cover rounded-lg border"
+          className="w-16 h-16 rounded-lg object-cover border"
         />
         <div>
           <h3 className="font-semibold text-gray-800 text-sm sm:text-base">
