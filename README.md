@@ -18,7 +18,7 @@ The project also includes a **fully functional Admin Panel** and is now being en
   - Monitor sales and analytics  
 - Smooth checkout process  
 - Fully responsive and user-friendly UI
-- *Link (https://e-commerce-webb.vercel.app/)*
+- __Link (https://e-commerce-webb.vercel.app/)__
 ---
 
 ## Tech Stack
