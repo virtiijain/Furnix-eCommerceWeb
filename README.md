@@ -6,7 +6,7 @@ The project also includes a **fully functional Admin Panel** and is now being en
 ---
 
 ## Functionality
-- Browse premium product collections  
+- Browse product collections  
 - Add or remove items from the cart  
 - Save or remove favorites in wishlist  
 - View and manage orders  
@@ -17,26 +17,17 @@ The project also includes a **fully functional Admin Panel** and is now being en
   - Handle user accounts and authentication
   - Monitor sales and analytics  
 - Smooth checkout process  
-- Fully responsive and user-friendly UI  
-
----
-
-## DevOps Features (In Progress)
-- **Automated Deployment:** Frontend hosted on **Netlify**, backend on **Render / Vercel** with CI/CD via **GitHub Actions**  
-- **Dockerized Application:** Frontend and backend containerized for consistent environment setup  
-- **Environment Management:** Secure handling of environment variables for database and API keys  
-- **Monitoring & Logging:** Track errors and server performance  
-- **Scalability Ready:** Structured to handle increased traffic and easy environment replication  
-
+- Fully responsive and user-friendly UI
+- [Live Link] (https://e-commerce-webb.vercel.app/)
 ---
 
 ## Tech Stack
 
 | Category | Technologies Used |
 |-----------|-------------------|
-| **Frontend** | React.js, Vite, Tailwind CSS |
-| **Backend** | Node.js, Express.js |
-| **Database** | MongoDB |
+| **Frontend** | React.Js[v18], Vite, Tailwind CSS |
+| **Backend** | Node.Js, Express.Js |
+| **Database** | MongoDB / MongoDB atals |
 | **State Management** | React Hooks / Context API |
 | **Authentication** | JWT, bcrypt, Express Validator |
-| **DevOps / Deployment** | Docker, GitHub Actions (CI/CD), Netlify (Frontend), Render / Vercel (Backend) |
+| **Deployment** | Vercel (Frontend), Render (Backend) |
