@@ -2,11 +2,13 @@ import PropTypes from "prop-types";
 import { X } from "lucide-react";
 
 const CartTable = ({ cartItems, handleQuantityChange, handleRemove }) => {
-  const getImageSrc = (image) =>
-  image
-    ? `${import.meta.env.VITE_BACKEND_URL}/images/${image}`
-    : `${import.meta.env.VITE_BACKEND_URL}/images/default.png`;
-
+  const getImageSrc = (product) =>
+    product?.image
+      ? `${import.meta.env.VITE_BACKEND_URL}/${product.image.replace(
+          /^\/+/,
+          ""
+        )}`
+      : `${import.meta.env.VITE_BACKEND_URL}/images/default.png`;
 
   return (
     <table className="w-full text-left hidden md:table">
@@ -26,7 +28,7 @@ const CartTable = ({ cartItems, handleQuantityChange, handleRemove }) => {
           <tr key={item._id} className="border-b hover:bg-gray-50 transition">
             <td className="py-4 flex items-center gap-4">
               <img
-                src={getImageSrc(item.productId?.image)}
+                src={getImageSrc(item.productId)}
                 alt={item.productId?.name || "Product"}
                 className="w-16 h-16 rounded-lg object-cover border"
               />

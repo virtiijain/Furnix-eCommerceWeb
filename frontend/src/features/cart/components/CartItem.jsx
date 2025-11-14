@@ -3,9 +3,9 @@ import { X } from "lucide-react";
 
 const CartItem = ({ item, handleQuantityChange, handleRemove }) => {
   const getImageSrc = (image) =>
-    image
-      ? `${import.meta.env.VITE_BACKEND_URL}${image}`
-      : `${import.meta.env.VITE_BACKEND_URL}/images/default.png`;
+  image
+    ? `${import.meta.env.VITE_BACKEND_URL}/${image.replace(/^\/+/, '')}`
+    : `${import.meta.env.VITE_BACKEND_URL}/images/default.png`;
 
   return (
     <div

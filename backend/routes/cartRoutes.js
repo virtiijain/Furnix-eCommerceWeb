@@ -1,5 +1,6 @@
 import express from "express";
 import Cart from "../models/Cart.js";
+import mongoose from "mongoose";
 
 const router = express.Router();
 
@@ -33,22 +34,25 @@ router.post("/", async (req, res) => {
   }
 });
 
-
 router.get("/:userId", async (req, res) => {
   try {
-    const cart = await Cart.findOne({ userId: req.params.userId })
-      .populate("items.productId") 
-      .populate("userId", "name email"); 
+    const { userId: userIdParam } = req.params;
 
-    if (!cart) {
-      return res.json({ items: [] });
+    if (!mongoose.Types.ObjectId.isValid(userIdParam)) {
+      return res.status(400).json({ message: "Invalid userId" });
     }
+    const userId = new mongoose.Types.ObjectId(userIdParam);
+    const cart = await Cart.findOne({ userId }).populate("items.productId");
 
-    res.json(cart); 
+    if (!cart) return res.json({ items: [] });
+
+    res.json(cart);
   } catch (err) {
+    console.error("Cart fetch error:", err);
     res.status(500).json({ message: "Error fetching cart", error: err.message });
   }
 });
+
 
 router.delete("/:userId/:productId", async (req, res) => {
   const { userId, productId } = req.params;

@@ -2,6 +2,7 @@ import { Package, Clock, MapPin } from "lucide-react";
 import PropTypes from "prop-types";
 
 const OrderCard = ({ order }) => {
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   return (
     <div className="bg-white border rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md transition w-full">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-3 gap-2 sm:gap-0">
@@ -23,7 +24,11 @@ const OrderCard = ({ order }) => {
           >
             <div className="flex items-center gap-3">
               <img
-                src={item.productId?.image || "/placeholder.png"}
+                src={
+                  item.productId?.image
+                    ? `${BACKEND_URL}${item.productId.image}`
+                    : `${BACKEND_URL}/images/default.png`
+                }
                 alt={item.productId?.name || "Product"}
                 className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg border object-cover"
               />
