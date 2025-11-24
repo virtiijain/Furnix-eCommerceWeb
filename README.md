@@ -1,9 +1,7 @@
 ## Description
 This modern e-commerce web application built using the **MERN Stack**.  
 It offers a smooth shopping experience where users can browse products, add items to cart or wishlist, manage orders, and securely checkout — all within a clean and responsive interface.  
-The project also includes a **fully functional Admin Panel** and is now being enhanced with **DevOps integration** for automated deployment and production-ready workflows.
-
----
+The project also includes a **fully functional Admin Panel**. It is fully Dockerized and set up with a CI/CD pipeline for automated builds and deployment, ensuring production-ready workflows and smooth continuous delivery.
 
 ## Functionality
 - Browse product collections  
@@ -18,9 +16,10 @@ The project also includes a **fully functional Admin Panel** and is now being en
   - Monitor sales and analytics  
 - Smooth checkout process  
 - Fully responsive and user-friendly UI
+- Dockerized application with CI/CD pipeline for automated builds and deployment
+- Deployed on Vercel (Frontend) and Render (Backend)
 - __Link (https://e-commerce-webb.vercel.app/)__
----
-
+  
 ## Tech Stack
 
 | Category | Technologies Used |
@@ -30,4 +29,6 @@ The project also includes a **fully functional Admin Panel** and is now being en
 | **Database** | MongoDB / MongoDB atals |
 | **State Management** | React Hooks / Context API |
 | **Authentication** | JWT, bcrypt, Express Validator |
+| **Devops** | Git, GitHub Actions, Docker, CI/CD Pipelines |
 | **Deployment** | Vercel (Frontend), Render (Backend) |
+
