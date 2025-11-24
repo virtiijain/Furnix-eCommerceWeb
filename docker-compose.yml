@@ -1,0 +1,67 @@
+version: '3.9'
+
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mern-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - mern-net
+
+  backend:
+    build: ./backend
+    container_name: mern-backend
+    restart: unless-stopped
+    ports:
+      - "5500:5500"
+    env_file:
+      - ./backend/.env
+    volumes:
+      - backend-images:/app/images
+    depends_on:
+      - mongo
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5500"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - mern-net
+
+  frontend:
+    build: ./frontend
+    container_name: mern-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - mern-net
+
+networks:
+  mern-net:
+    driver: bridge
+
+volumes:
+  mongo-data:
+  backend-images:
