@@ -20,11 +20,13 @@ jobs:
           node-version: 18
 
       - name: Install dependencies
+        working-directory: ./frontend
         run: npm install
 
-      # IMPORTANT: Test command removed
       - name: Skip tests
+        working-directory: ./frontend
         run: echo "No tests to run"
 
       - name: Build project
+        working-directory: ./frontend
         run: npm run build
